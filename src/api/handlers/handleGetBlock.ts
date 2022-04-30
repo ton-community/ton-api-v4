@@ -1,4 +1,5 @@
 import express from 'express';
+import { Address } from 'ton';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 
@@ -34,12 +35,27 @@ export function handleGetBlock(client: LiteClient): express.RequestHandler {
                 .set('Cache-Control', 'public, max-age=31536000')
                 .send({
                     exist: true,
-                    block
+                    block: {
+                        shards: block.shards.map((sh) => ({
+                            workchain: sh.workchain,
+                            seqno: sh.seqno,
+                            shard: sh.shard,
+                            rootHash: sh.rootHash.toString('base64'),
+                            fileHash: sh.fileHash.toString('base64'),
+                            transactions: sh.transactions.map((tr) => ({
+                                account: new Address(sh.workchain, tr.account).toFriendly(),
+                                hash: tr.hash.toString('base64'),
+                                lt: tr.lt
+                            }))
+                        }))
+                    }
                 });
         } catch (e) {
             warn(e);
             try {
-                res.status(500).send('500 Internal Error');
+                res.status(500)
+                    .set('Cache-Control', 'public, max-age=5')
+                    .send('500 Internal Error');
             } catch (e) {
                 warn(e);
             }

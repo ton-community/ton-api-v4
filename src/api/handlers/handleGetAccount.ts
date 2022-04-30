@@ -32,7 +32,7 @@ export function handleGetAccount(client: LiteClient): express.RequestHandler {
 
             // Return data
             res.status(200)
-                .set('Cache-Control', 'public, max-age=31536000')
+                .set('Cache-Control', 'public, max-age=5')
                 .send({
                     account: {
                         state,
@@ -56,7 +56,9 @@ export function handleGetAccount(client: LiteClient): express.RequestHandler {
         } catch (e) {
             warn(e);
             try {
-                res.status(500).send('500 Internal Error');
+                res.status(500)
+                    .set('Cache-Control', 'public, max-age=5')
+                    .send('500 Internal Error');
             } catch (e) {
                 warn(e);
             }

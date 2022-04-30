@@ -6,8 +6,9 @@ export function handleGetBlockLatest(client: LiteClient): express.RequestHandler
     return async (req, res) => {
         try {
             let mc = await client.getMasterchainInfoExt();
+            let maxAge = Math.min(Math.max((mc.lastUtime - mc.lastUtime) - 5, 1), 5);
             res.status(200)
-                .set('Cache-Control', 'public, must-revalidate, max-age=5')
+                .set('Cache-Control', 'public, must-revalidate, max-age=' + maxAge)
                 .send({
                     last: {
                         seqno: mc.last.seqno,

@@ -1,12 +1,14 @@
 import express from 'express';
 import { LiteClient } from 'ton-lite-client';
-import { warn } from "../../utils/log";
+import { BlockSync } from '../../sync/BlockSync';
+import { log, warn } from "../../utils/log";
 
-export function handleGetBlockLatest(client: LiteClient): express.RequestHandler {
+export function handleGetBlockLatest(client: LiteClient, blockSync: BlockSync): express.RequestHandler {
     return async (req, res) => {
         try {
-            let mc = await client.getMasterchainInfoExt();
-            let maxAge = Math.min(Math.max((mc.lastUtime - mc.lastUtime) - 5, 1), 5);
+            let mc = blockSync.current;
+            let timeDelta = Math.floor(Date.now() / 1000) - mc.lastUtime;
+            let maxAge = Math.min(Math.max(7 - timeDelta, 1), 5);
             res.status(200)
                 .set('Cache-Control', 'public, must-revalidate, max-age=' + maxAge)
                 .send({
@@ -22,8 +24,7 @@ export function handleGetBlockLatest(client: LiteClient): express.RequestHandler
                         rootHash: mc.init.rootHash.toString('base64')
                     },
                     stateRootHash: mc.stateRootHash.toString('base64'),
-                    now: mc.now,
-                    syncTime: mc.lastUtime
+                    now: mc.lastUtime
                 });
         } catch (e) {
             warn(e);

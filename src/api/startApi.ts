@@ -1,12 +1,13 @@
 import cors from 'cors';
 import express from 'express';
 import { LiteClient } from 'ton-lite-client';
+import { BlockSync } from '../sync/BlockSync';
 import { log } from '../utils/log';
-import { handleGetAccount } from './handlers/handleGetAccount';
+import { handleGetBlockAccount } from './handlers/handleGetBlockAccount';
 import { handleGetBlock } from './handlers/handleGetBlock';
 import { handleGetBlockLatest } from './handlers/handleGetBlockLatest';
 
-export async function startApi(client: LiteClient) {
+export async function startApi(client: LiteClient, blockSync: BlockSync) {
 
     // Configure
     log('Starting API...');
@@ -17,11 +18,9 @@ export async function startApi(client: LiteClient) {
     });
 
     // Handlers
-    app.get('/block/latest', handleGetBlockLatest(client));
+    app.get('/block/latest', handleGetBlockLatest(client, blockSync));
     app.get('/block/:seqno', handleGetBlock(client));
-    app.get('/account/:address', handleGetAccount(client));
-    // app.get('/tx/:address', handleGetTransactions());
-    // app.get('/status', handleGetStatus());
+    app.get('/block/:seqno/:address', handleGetBlockAccount(client));
 
     // Start
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;

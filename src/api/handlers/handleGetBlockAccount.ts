@@ -3,14 +3,15 @@ import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from 'ton';
 
-export function handleGetAccount(client: LiteClient): express.RequestHandler {
+export function handleGetBlockAccount(client: LiteClient): express.RequestHandler {
     return async (req, res) => {
         try {
+            const seqno = parseInt(req.params.seqno, 10);
             const address = Address.parseFriendly(req.params.address).address;
 
             // Fetch account state
-            let mcInfo = (await client.getMasterchainInfoExt());
-            let account = await client.getAccountState(address, mcInfo.last);
+            let mcInfo = (await client.lookupBlockByID({ seqno: seqno, shard: '-9223372036854775808', workchain: -1 }));
+            let account = await client.getAccountState(address, mcInfo.id);
 
             // Resolve state
             let state: any;
@@ -45,13 +46,12 @@ export function handleGetAccount(client: LiteClient): express.RequestHandler {
                         } : null,
                     },
                     block: {
-                        workchain: mcInfo.last.workchain,
-                        seqno: mcInfo.last.seqno,
-                        shard: mcInfo.last.shard,
-                        fileHash: mcInfo.last.fileHash.toString('base64'),
-                        rootHash: mcInfo.last.rootHash.toString('base64')
-                    },
-                    time: mcInfo.lastUtime
+                        workchain: mcInfo.id.workchain,
+                        seqno: mcInfo.id.seqno,
+                        shard: mcInfo.id.shard,
+                        fileHash: mcInfo.id.fileHash.toString('base64'),
+                        rootHash: mcInfo.id.rootHash.toString('base64')
+                    }
                 });
         } catch (e) {
             warn(e);

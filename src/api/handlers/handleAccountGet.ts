@@ -3,7 +3,7 @@ import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from 'ton';
 
-export function handleGetBlockAccount(client: LiteClient): express.RequestHandler {
+export function handleAccountGet(client: LiteClient): express.RequestHandler {
     return async (req, res) => {
         try {
             const seqno = parseInt(req.params.seqno, 10);
@@ -33,7 +33,7 @@ export function handleGetBlockAccount(client: LiteClient): express.RequestHandle
 
             // Return data
             res.status(200)
-                .set('Cache-Control', 'public, max-age=5')
+                .set('Cache-Control', 'public, max-age=31536000')
                 .send({
                     account: {
                         state,
@@ -57,7 +57,7 @@ export function handleGetBlockAccount(client: LiteClient): express.RequestHandle
             warn(e);
             try {
                 res.status(500)
-                    .set('Cache-Control', 'public, max-age=5')
+                    .set('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
                 warn(e);

@@ -3,7 +3,8 @@ import express from 'express';
 import { LiteClient } from 'ton-lite-client';
 import { BlockSync } from '../sync/BlockSync';
 import { log } from '../utils/log';
-import { handleGetBlockAccount } from './handlers/handleGetBlockAccount';
+import { handleAccountGet } from './handlers/handleAccountGet';
+import { handleAccountRun } from './handlers/handleAccountRun';
 import { handleGetBlock } from './handlers/handleGetBlock';
 import { handleGetBlockLatest } from './handlers/handleGetBlockLatest';
 
@@ -20,7 +21,8 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
     // Handlers
     app.get('/block/latest', handleGetBlockLatest(client, blockSync));
     app.get('/block/:seqno', handleGetBlock(client));
-    app.get('/block/:seqno/:address', handleGetBlockAccount(client));
+    app.get('/block/:seqno/:address', handleAccountGet(client));
+    app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
 
     // Start
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;

@@ -30,7 +30,7 @@ export function handleGetBlockLatest(client: LiteClient, blockSync: BlockSync): 
             warn(e);
             try {
                 res.status(500)
-                    .set('Cache-Control', 'public, max-age=5')
+                    .set('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
                 warn(e);

@@ -21,7 +21,8 @@ export function handleGetBlockLatest(client: LiteClient): express.RequestHandler
                         rootHash: mc.init.rootHash.toString('base64')
                     },
                     stateRootHash: mc.stateRootHash.toString('base64'),
-                    now: mc.now
+                    now: mc.now,
+                    syncTime: mc.lastUtime
                 });
         } catch (e) {
             warn(e);

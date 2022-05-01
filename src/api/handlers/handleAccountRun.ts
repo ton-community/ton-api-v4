@@ -1,4 +1,4 @@
-import express from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { log, warn } from "../../utils/log";
 import { Address, Cell, parseStack, StackItem } from 'ton';
@@ -23,13 +23,13 @@ function stackToString(item: StackItem): any {
     }
 }
 
-export function handleAccountRun(client: LiteClient): express.RequestHandler {
-    return async (req, res) => {
+export function handleAccountRun(client: LiteClient) {
+    return async (req: FastifyRequest, res: FastifyReply) => {
         try {
-            const seqno = parseInt(req.params.seqno, 10);
-            const address = Address.parseFriendly(req.params.address).address;
-            const command = req.params.command;
-            const args = req.params.args as string | undefined;
+            const seqno = parseInt((req.params as any).seqno, 10);
+            const address = Address.parseFriendly((req.params as any).address).address;
+            const command = (req.params as any).command;
+            const args = (req.params as any).args as string | undefined;
             const parsedArgs = args && args.length > 0 ? Buffer.from(args, 'base64') : Buffer.alloc(0);
             let stackArgs: StackItem[] = [];
             if (parsedArgs.length > 0) {
@@ -43,7 +43,7 @@ export function handleAccountRun(client: LiteClient): express.RequestHandler {
 
             // Return data
             res.status(200)
-                .set('Cache-Control', 'public, max-age=31536000')
+                .header('Cache-Control', 'public, max-age=31536000')
                 .send({
                     arguments: stackArgs.map(stackToString),
                     result: resultParsed ? resultParsed.map(stackToString) : null,
@@ -68,7 +68,7 @@ export function handleAccountRun(client: LiteClient): express.RequestHandler {
             warn(e);
             try {
                 res.status(500)
-                    .set('Cache-Control', 'public, max-age=1')
+                    .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
                 warn(e);

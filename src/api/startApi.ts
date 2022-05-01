@@ -1,5 +1,4 @@
-import cors from 'cors';
-import express from 'express';
+import fastify from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { BlockSync } from '../sync/BlockSync';
 import { log } from '../utils/log';
@@ -12,8 +11,7 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
 
     // Configure
     log('Starting API...');
-    const app = express();
-    app.use(cors());
+    const app = fastify();
     app.get('/', (req, res) => {
         res.send('Welcome to TON API v4!');
     });
@@ -26,6 +24,6 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
 
     // Start
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
-    await new Promise<void>((resolve) => app.listen(port, resolve));
+    await app.listen(port);
     log('API ready on port http://localhost:' + port);
 }

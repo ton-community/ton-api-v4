@@ -1,13 +1,13 @@
-import express from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from 'ton';
 
-export function handleAccountGet(client: LiteClient): express.RequestHandler {
-    return async (req, res) => {
+export function handleAccountGet(client: LiteClient) {
+    return async (req: FastifyRequest, res: FastifyReply) => {
         try {
-            const seqno = parseInt(req.params.seqno, 10);
-            const address = Address.parseFriendly(req.params.address).address;
+            const seqno = parseInt((req.params as any).seqno, 10);
+            const address = Address.parseFriendly((req.params as any).address).address;
 
             // Fetch account state
             let mcInfo = (await client.lookupBlockByID({ seqno: seqno, shard: '-9223372036854775808', workchain: -1 }));
@@ -37,7 +37,7 @@ export function handleAccountGet(client: LiteClient): express.RequestHandler {
 
             // Return data
             res.status(200)
-                .set('Cache-Control', 'public, max-age=31536000')
+                .header('Cache-Control', 'public, max-age=31536000')
                 .send({
                     account: {
                         state,
@@ -61,7 +61,7 @@ export function handleAccountGet(client: LiteClient): express.RequestHandler {
             warn(e);
             try {
                 res.status(500)
-                    .set('Cache-Control', 'public, max-age=1')
+                    .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
                 warn(e);

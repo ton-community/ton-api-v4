@@ -1,17 +1,17 @@
-import express from 'express';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { Address } from 'ton';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 
-export function handleGetBlock(client: LiteClient): express.RequestHandler {
-    return async (req, res) => {
+export function handleGetBlock(client: LiteClient) {
+    return async (req: FastifyRequest, res: FastifyReply) => {
         try {
-            const seqno = parseInt(req.params.seqno, 10);
+            const seqno = parseInt((req.params as any).seqno, 10);
 
             // Check if seqno is valid
             if (seqno <= 0) {
                 res.status(200)
-                    .set('Cache-Control', 'public, max-age=31536000')
+                    .header('Cache-Control', 'public, max-age=31536000')
                     .send({
                         exist: false
                     });
@@ -21,7 +21,7 @@ export function handleGetBlock(client: LiteClient): express.RequestHandler {
             const lastSeqno = (await client.getMasterchainInfo()).last.seqno;
             if (seqno > lastSeqno) {
                 res.status(200)
-                    .set('Cache-Control', 'public, max-age=5')
+                    .header('Cache-Control', 'public, max-age=5')
                     .send({
                         exist: false
                     });
@@ -32,7 +32,7 @@ export function handleGetBlock(client: LiteClient): express.RequestHandler {
 
             // Return data
             res.status(200)
-                .set('Cache-Control', 'public, max-age=31536000')
+                .header('Cache-Control', 'public, max-age=31536000')
                 .send({
                     exist: true,
                     block: {
@@ -54,7 +54,7 @@ export function handleGetBlock(client: LiteClient): express.RequestHandler {
             warn(e);
             try {
                 res.status(500)
-                    .set('Cache-Control', 'public, max-age=1')
+                    .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
                 warn(e);

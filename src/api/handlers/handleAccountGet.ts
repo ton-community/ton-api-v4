@@ -15,19 +15,23 @@ export function handleAccountGet(client: LiteClient): express.RequestHandler {
 
             // Resolve state
             let state: any;
-            if (account.state.storage.state.type === 'uninit') {
-                state = { type: 'uninit' }
-            } else if (account.state.storage.state.type === 'active') {
-                state = {
-                    type: 'active',
-                    code: account.state.storage.state.state.code!.toBoc({ idx: true }).toString('base64'),
-                    data: account.state.storage.state.state.data!.toBoc({ idx: true }).toString('base64')
+            if (account.state) {
+                if (account.state.storage.state.type === 'uninit') {
+                    state = { type: 'uninit' };
+                } else if (account.state.storage.state.type === 'active') {
+                    state = {
+                        type: 'active',
+                        code: account.state.storage.state.state.code!.toBoc({ idx: true }).toString('base64'),
+                        data: account.state.storage.state.state.data!.toBoc({ idx: true }).toString('base64')
+                    };
+                } else {
+                    state = {
+                        type: 'frozen',
+                        stateHash: account.state.storage.state.stateHash.toString('base64')
+                    };
                 }
             } else {
-                state = {
-                    type: 'frozen',
-                    stateHash: account.state.storage.state.stateHash.toString('base64')
-                }
+                state = { type: 'uninit' };
             }
 
 

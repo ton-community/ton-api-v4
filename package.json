@@ -38,6 +38,6 @@
     "teslabot": "^1.3.0",
     "ton": "^10.3.0",
     "ton-crypto": "2.1.0",
-    "ton-lite-client": "^1.2.0"
+    "ton-lite-client": "^1.2.1"
   }
 }

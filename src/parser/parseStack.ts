@@ -1,4 +1,4 @@
-import { Slice } from "ton";
+import { Cell, Slice } from "ton";
 
 // vm_stk_null#00 = VmStackValue;
 // vm_stk_tinyint#01 value:int64 = VmStackValue;
@@ -36,7 +36,10 @@ function parseStackValue(cs: Slice): any {
     } else if (kind === 4) {
         let startBits = cs.readUintNumber(10);
         let endBits = cs.readUintNumber(10);
-        return { type: 'slice', cell: cs.readCell().toBoc({ idx: false }).toString('base64'), startBits, endBits };
+        let rs = cs.readCell().beginParse();
+        rs.skip(startBits);
+        let dt = rs.readBitString(endBits - startBits);
+        return { type: 'slice', cell: new Cell('ordinary', dt).toBoc({ idx: false }).toString('base64') };
     } else if (kind === 5) {
         return { type: 'builder', cell: cs.readCell().toBoc({ idx: false }).toString('base64') };
     } else {

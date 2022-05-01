@@ -3078,10 +3078,27 @@ ton-tl@^0.2.1:
     crc-32 "^1.2.2"
     pegjs "^0.10.0"
 
-ton@^10.0.0, ton@^10.0.1:
+ton@^10.0.0:
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/ton/-/ton-10.0.1.tgz#9e7551edc62ed667089d12b6ccca12867a3b2dff"
   integrity sha512-DsR/QgSks0R72lNxUXuVRHMxAnNVMuHIkEy4uwQxkUB/7hIFsoYc9ldfOMtSCDyFR8k8+pzHrdgRsLbutB8KTQ==
+  dependencies:
+    axios "^0.25.0"
+    bn.js "5.2.0"
+    dataloader "^2.0.0"
+    ethjs-unit "0.1.6"
+    fp-ts "^2.11.1"
+    io-ts "^2.2.16"
+    io-ts-reporters "^2.0.0"
+    symbol.inspect "1.0.1"
+    teslabot "^1.3.0"
+    ton-crypto "2.1.0"
+    tweetnacl "1.0.3"
+
+ton@^10.2.0:
+  version "10.2.0"
+  resolved "https://registry.yarnpkg.com/ton/-/ton-10.2.0.tgz#58cdb551df747db05f51bdf2622bd526144d73ef"
+  integrity sha512-phEffIV3KEFwQB7fy9/Jc2YJau+kMUX7OYMV1DtOvMBFKM+Dj6TXTxJU/xwhPKhUBJzrVB2oAirw7v01i1sV5g==
   dependencies:
     axios "^0.25.0"
     bn.js "5.2.0"

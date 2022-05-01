@@ -3095,10 +3095,10 @@ ton@^10.0.0:
     ton-crypto "2.1.0"
     tweetnacl "1.0.3"
 
-ton@^10.2.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/ton/-/ton-10.2.0.tgz#58cdb551df747db05f51bdf2622bd526144d73ef"
-  integrity sha512-phEffIV3KEFwQB7fy9/Jc2YJau+kMUX7OYMV1DtOvMBFKM+Dj6TXTxJU/xwhPKhUBJzrVB2oAirw7v01i1sV5g==
+ton@^10.3.0:
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/ton/-/ton-10.3.0.tgz#d16634e09f2693415ffee65adc899fdf3a48aef8"
+  integrity sha512-KleSlAW8cm5Np1cYoEGmtQ+Id/2mqooNBBQn6CEpMAynycNMMJR/QYe2BO9qfO/L9zNAp9kMNFjRkxKd/XrI/Q==
   dependencies:
     axios "^0.25.0"
     bn.js "5.2.0"

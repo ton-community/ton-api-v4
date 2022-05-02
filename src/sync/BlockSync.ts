@@ -1,3 +1,4 @@
+import { BN } from "bn.js";
 import EventEmitter from "events";
 import { number } from "fp-ts";
 import { delay, InvalidateSync } from "teslabot";
@@ -25,14 +26,27 @@ function convertBlockFull(seqno: number, src: {
         shard: string;
     }[];
 }) {
-    let changed = new Set<string>();
+    let changed: { [key: string]: { lt: string, hash: string } } = {};
     for (let s of src.shards) {
         for (let t of s.transactions) {
             let addr = new Address(s.workchain, t.account).toFriendly();
-            changed.add(addr);
+            let ex = changed[addr];
+            if (ex) {
+                if (new BN(t.lt).gt(new BN(ex.lt))) {
+                    changed[addr] = {
+                        lt: t.lt,
+                        hash: t.hash.toString('base64')
+                    }
+                }
+            } else {
+                changed[addr] = {
+                    lt: t.lt,
+                    hash: t.hash.toString('base64')
+                }
+            }
         }
     }
-    return { seqno, changed: Array.from(changed) }
+    return { seqno, changed }
 }
 
 export class BlockSync extends EventEmitter {
@@ -41,7 +55,7 @@ export class BlockSync extends EventEmitter {
 
     #current: liteServer_MasterchainInfoExt;
     #currentSimple: any;
-    #currentFull: { seqno: number, changed: string[] } | null = null;
+    #currentFull: { seqno: number, changed: { [key: string]: { lt: string, hash: string } } } | null = null;
 
     #stopped = false;
     #fullBlockSync: InvalidateSync;

@@ -1,5 +1,7 @@
 import EventEmitter from "events";
-import { delay } from "teslabot";
+import { number } from "fp-ts";
+import { delay, InvalidateSync } from "teslabot";
+import { Address } from "ton";
 import { LiteClient } from "ton-lite-client";
 import { liteServer_MasterchainInfoExt } from "ton-lite-client/dist/schema";
 import { log } from "../utils/log";
@@ -9,18 +11,68 @@ function convertBlock(src: liteServer_MasterchainInfoExt) {
     return { seqno: src.last.seqno, time: src.lastUtime, now: src.now };
 }
 
+function convertBlockFull(seqno: number, src: {
+    shards: {
+        rootHash: Buffer;
+        fileHash: Buffer;
+        transactions: {
+            hash: Buffer;
+            lt: string;
+            account: Buffer;
+        }[];
+        workchain: number;
+        seqno: number;
+        shard: string;
+    }[];
+}) {
+    let changed = new Set<string>();
+    for (let s of src.shards) {
+        for (let t of s.transactions) {
+            let addr = new Address(s.workchain, t.account).toFriendly();
+            changed.add(addr);
+        }
+    }
+    return { seqno, changed: Array.from(changed) }
+}
+
 export class BlockSync extends EventEmitter {
 
     #client: LiteClient;
+
     #current: liteServer_MasterchainInfoExt;
-    #stopped = false;
     #currentSimple: any;
+    #currentFull: { seqno: number, changed: string[] } | null = null;
+
+    #stopped = false;
+    #fullBlockSync: InvalidateSync;
 
     constructor(initial: liteServer_MasterchainInfoExt, client: LiteClient) {
         super();
         this.#client = client;
         this.#current = initial;
         this.#currentSimple = convertBlock(initial);
+        this.#fullBlockSync = new InvalidateSync(async () => {
+            while (true) {
+
+                if (!this.#currentFull) {
+                    let block = await this.#client.getFullBlock(initial.last.seqno);
+                    this.#currentFull = convertBlockFull(initial.last.seqno, block);
+                    this.emit('block_full', this.#currentFull);
+                    continue;
+                }
+
+                // Fetch next
+                if (this.#current.last.seqno > this.#currentFull.seqno) {
+                    let block = await this.#client.getFullBlock(this.#currentFull.seqno + 1);
+                    this.#currentFull = convertBlockFull(this.#currentFull.seqno + 1, block);
+                    this.emit('block_full', this.#currentFull);
+                    continue;
+                } else {
+                    break;
+                }
+            }
+        });
+        this.#fullBlockSync.invalidate();
         this.start();
     }
 
@@ -30,6 +82,10 @@ export class BlockSync extends EventEmitter {
 
     get currentSimple() {
         return this.#currentSimple;
+    }
+
+    get currentFull() {
+        return this.#currentFull;
     }
 
     stop() {
@@ -43,6 +99,7 @@ export class BlockSync extends EventEmitter {
                 let nmc = await this.#client.getMasterchainInfoExt();
                 if (nmc.last.seqno > this.#current.last.seqno) {
                     this.#current = nmc;
+                    this.#fullBlockSync.invalidate();
                     this.emit('block', convertBlock(nmc));
                     log('New block: ' + this.#current.last.seqno);
                 }

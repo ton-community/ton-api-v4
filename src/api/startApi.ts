@@ -5,6 +5,7 @@ import { log } from '../utils/log';
 import { handleAccountGet } from './handlers/handleAccountGet';
 import { handleAccountRun } from './handlers/handleAccountRun';
 import { handleBlockWatch } from './handlers/handleBlockWatch';
+import { handleBlockWatchChanged } from './handlers/handleBlockWatchChanged';
 import { handleGetBlock } from './handlers/handleGetBlock';
 import { handleGetBlockLatest } from './handlers/handleGetBlockLatest';
 
@@ -20,6 +21,7 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
 
     // Handlers
     app.get('/block/watch', { websocket: true } as any, handleBlockWatch(client, blockSync));
+    app.get('/block/watch/changed', { websocket: true } as any, handleBlockWatchChanged(client, blockSync));
     app.get('/block/latest', handleGetBlockLatest(client, blockSync));
     app.get('/block/:seqno', handleGetBlock(client));
     app.get('/block/:seqno/:address', handleAccountGet(client));

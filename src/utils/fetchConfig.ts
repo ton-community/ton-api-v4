@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as t from 'io-ts';
+import { log, warn } from "./log";
 
 function intToIP(int: number) {
     var part1 = int & 255;
@@ -22,8 +23,10 @@ const codec = t.type({
 })
 
 export async function fetchConfig(src: string) {
+    log('Fetching "' + src + '"');
     let config = (await axios.get(src)).data;
     if (!codec.is(config)) {
+        warn(config);
         throw Error('Invalid config');
     }
     return config.liteservers.map((ls) => ({ ip: intToIP(ls.ip), port: ls.port, key: Buffer.from(ls.id.key, 'base64') }));

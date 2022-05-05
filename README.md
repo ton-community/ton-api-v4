@@ -15,7 +15,7 @@ WARNING: Beware that testnet API works only with recent blocks and doesn't have 
 Easiest way to selfhost is to use docker:
 
 ```bash
-docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v9
+docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v10
 ```
 
 ## Methods

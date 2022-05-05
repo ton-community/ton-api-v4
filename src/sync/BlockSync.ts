@@ -68,6 +68,8 @@ export class BlockSync extends EventEmitter {
         this.#fullBlockSync = new InvalidateSync(async () => {
             while (true) {
 
+                let current = this.#current.last.seqno;
+
                 if (!this.#currentFull) {
                     let block = await this.#client.getFullBlock(initial.last.seqno);
                     this.#currentFull = convertBlockFull(initial.last.seqno, block);
@@ -76,9 +78,9 @@ export class BlockSync extends EventEmitter {
                 }
 
                 // Fetch next
-                if (this.#current.last.seqno > this.#currentFull.seqno) {
-                    let block = await this.#client.getFullBlock(this.#currentFull.seqno + 1);
-                    this.#currentFull = convertBlockFull(this.#currentFull.seqno + 1, block);
+                if (current > this.#currentFull.seqno) {
+                    let block = await this.#client.getFullBlock(current);
+                    this.#currentFull = convertBlockFull(current, block);
                     this.emit('block_full', this.#currentFull);
                     continue;
                 } else {

@@ -3,6 +3,7 @@ import { LiteClient } from 'ton-lite-client';
 import { BlockSync } from '../sync/BlockSync';
 import { log } from '../utils/log';
 import { handleAccountGet } from './handlers/handleAccountGet';
+import { handleAccountGetLight } from './handlers/handleAccountGetLight';
 import { handleAccountRun } from './handlers/handleAccountRun';
 import { handleBlockWatch } from './handlers/handleBlockWatch';
 import { handleBlockWatchChanged } from './handlers/handleBlockWatchChanged';
@@ -25,6 +26,7 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
     app.get('/block/latest', handleGetBlockLatest(client, blockSync));
     app.get('/block/:seqno', handleGetBlock(client));
     app.get('/block/:seqno/:address', handleAccountGet(client));
+    app.get('/block/:seqno/:address/light', handleAccountGetLight(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
 
     // Start

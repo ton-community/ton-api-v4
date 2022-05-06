@@ -14,7 +14,7 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
 
     // Configure
     log('Starting API...');
-    const app = fastify();
+    const app = fastify({ logger: process.env.LOG_ENABLE === 'true' });
     app.register(require('@fastify/websocket'));
     app.get('/', (req, res) => {
         res.send('Welcome to TON API v4!');

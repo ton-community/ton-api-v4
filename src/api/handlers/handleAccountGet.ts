@@ -34,6 +34,14 @@ export function handleAccountGet(client: LiteClient) {
                 state = { type: 'uninit' };
             }
 
+            // Convert currencies
+            let currencies: { [id: number]: number } = {};
+            if (account.balance.extraCurrencies) {
+                for (let ec of account.balance.extraCurrencies) {
+                    currencies[ec[0]] = ec[1];
+                }
+            }
+
 
             // Return data
             res.status(200)
@@ -42,7 +50,8 @@ export function handleAccountGet(client: LiteClient) {
                     account: {
                         state,
                         balance: {
-                            coins: account.balance.coins.toString(10)
+                            coins: account.balance.coins.toString(10),
+                            currencies
                         },
                         last: account.lastTx ? {
                             lt: account.lastTx.lt,

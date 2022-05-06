@@ -2924,10 +2924,10 @@ ton-crypto@2.1.0:
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
 
-ton-lite-client@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.2.2.tgz#48cff0b5970e43d6df18aafd3a7ef771e4274175"
-  integrity sha512-FQkSJW67rjq1Yj5C984Pz3c7+ujYOqbhDbeotIzvaeT5VjgNZzdnKPKe91pmdzndgp64RjS+ceM8wQzABXakBA==
+ton-lite-client@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.2.4.tgz#d8a6f3fe1634690f1364f9a1dd37dc382caeeebc"
+  integrity sha512-fCUBYOQZMPkrUjVBiwc9IbwkmGfVHj6KT0qcBTilSoO5QeWvnNSq5GomHU/QxmdE5wv8n8FjlWf7ph9WOmQP5A==
   dependencies:
     "@types/bn.js" "^5.1.0"
     adnl "^0.0.3"
@@ -2936,7 +2936,7 @@ ton-lite-client@^1.2.2:
     date-fns "^2.28.0"
     pegjs "^0.10.0"
     teslabot "^1.5.0"
-    ton "^10.0.0"
+    ton "^10.4.3"
     ton-tl "^0.2.1"
 
 ton-tl@^0.2.1:
@@ -2951,10 +2951,10 @@ ton-tl@^0.2.1:
     crc-32 "^1.2.2"
     pegjs "^0.10.0"
 
-ton@^10.0.0:
-  version "10.0.1"
-  resolved "https://registry.yarnpkg.com/ton/-/ton-10.0.1.tgz#9e7551edc62ed667089d12b6ccca12867a3b2dff"
-  integrity sha512-DsR/QgSks0R72lNxUXuVRHMxAnNVMuHIkEy4uwQxkUB/7hIFsoYc9ldfOMtSCDyFR8k8+pzHrdgRsLbutB8KTQ==
+ton@^10.3.0:
+  version "10.3.0"
+  resolved "https://registry.yarnpkg.com/ton/-/ton-10.3.0.tgz#d16634e09f2693415ffee65adc899fdf3a48aef8"
+  integrity sha512-KleSlAW8cm5Np1cYoEGmtQ+Id/2mqooNBBQn6CEpMAynycNMMJR/QYe2BO9qfO/L9zNAp9kMNFjRkxKd/XrI/Q==
   dependencies:
     axios "^0.25.0"
     bn.js "5.2.0"
@@ -2968,10 +2968,10 @@ ton@^10.0.0:
     ton-crypto "2.1.0"
     tweetnacl "1.0.3"
 
-ton@^10.3.0:
-  version "10.3.0"
-  resolved "https://registry.yarnpkg.com/ton/-/ton-10.3.0.tgz#d16634e09f2693415ffee65adc899fdf3a48aef8"
-  integrity sha512-KleSlAW8cm5Np1cYoEGmtQ+Id/2mqooNBBQn6CEpMAynycNMMJR/QYe2BO9qfO/L9zNAp9kMNFjRkxKd/XrI/Q==
+ton@^10.4.3:
+  version "10.4.3"
+  resolved "https://registry.yarnpkg.com/ton/-/ton-10.4.3.tgz#c32c87c5a9b369f24809c2b7189d0d642cbee552"
+  integrity sha512-xTWJr8G1sMjddA5rhG44UFIkhfxUixNEzcu5gygr7PRPMLY+FN30EWiqpqIpe213fQZg1mmE0tFgyZTXm7XmFA==
   dependencies:
     axios "^0.25.0"
     bn.js "5.2.0"

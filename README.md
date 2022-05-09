@@ -15,7 +15,7 @@ WARNING: Beware that testnet API works only with recent blocks and doesn't have 
 Easiest way to selfhost is to use docker:
 
 ```bash
-docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v13
+docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v14
 ```
 
 ## Methods
@@ -259,6 +259,19 @@ Example:
 {"seqno":20260501,"changed":{"Ef8zMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM0vF":{"lt":"27588049000002","hash":"i6nR8lqWJIfLHP0e5WQYbVBS+8fEsBx04XFsWVnFoKM="},"Ef80UXx731GHxVr0-LYf3DIViMerdo3uJLAG3ykQZFjXz2kW":{"lt":"27588049000003","hash":"qb1LNSY4wg7E7IbCeHICzfdMkv0pwGAtsrFrnQxjrsw="},"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn":{"lt":"27588049000003","hash":"VRq8cy8GnbNV5N6JUd8azFcdwrT0JYlAhBmo2NOmInc="},"EQCtiv7PrMJImWiF2L5oJCgPnzp-VML2CAt5cbn1VsKAxLiE":{"lt":"27588047000001","hash":"gz+a51hfE5XbtFvL8BFtX6q64XYDVrw6w2Qh0VT8OjM="},"EQDtS0EPqLKA06kzJG3LzldZ8taNBLnceXZLpar8QsAE-lWn":{"lt":"27588047000003","hash":"tVNm6wMSfKLr+fWaVTNweW8vY2b2cXH2n5hYg63coFk="}}}
 {"seqno":20260502,"changed":{"Ef8zMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM0vF":{"lt":"27588050000002","hash":"NR8u5tkKZtN+SNVHeXYH1o56rJD2q0eD8W2f4fLR3pI="},"Ef80UXx731GHxVr0-LYf3DIViMerdo3uJLAG3ykQZFjXz2kW":{"lt":"27588050000003","hash":"QxhNkVByJ8wQf5NNSrb42u9wzfih1GEULDIbsAAEx7U="},"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn":{"lt":"27588050000003","hash":"3RrFGqI3smj6FHsf+FYCyROQUuw2Cq/esg51RwV1Gck="}}}
 {"seqno":20260503,"changed":{"Ef8zMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM0vF":{"lt":"27588051000002","hash":"jw2njtwbmMpg6ceUNGCNJ6Ru/ZMBFesv8gg86P5pW3Q="},"Ef80UXx731GHxVr0-LYf3DIViMerdo3uJLAG3ykQZFjXz2kW":{"lt":"27588051000003","hash":"pESWozJgTp2TyMMJRQtiqtGRIfPsY79EchCKVOxTPBc="},"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn":{"lt":"27588051000003","hash":"gddKcouSNPYD5/z/W5egrkXiI/uCc3RnN0cyhigfyTc="}}}
+```
+
+### Get config at block
+
+```
+GET /block/<seqno>/config
+```
+
+NOTE: you need to manually parse cell into dict with 32 bit integer keys.
+
+[Example Active](https://mainnet-v4.tonhubapi.com/block/20260051/config)
+```json
+{"exist":true,"config":{"cell":"te6cckICA2sA...VVVVVVVVVVVVVVVVVVVVVVVxKjDV","address":"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn","globalBalance":{"coins":"5059853249096870767"}}}
 ```
 
 ## License

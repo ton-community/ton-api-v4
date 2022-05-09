@@ -1,5 +1,5 @@
 import BN from "bn.js";
-import { Address, beginCell, Cell } from "ton";
+import { Address, beginCell, Cell, StackItem } from "ton";
 import { TVMStackEntry, TVMStackEntryCell, TVMStackEntryCellSlice, TVMStackEntryInt, TVMStackEntryNull, TVMStackEntryTuple, runContract as executeContract } from 'ton-contract-executor';
 import { randomBytes } from "crypto";
 
@@ -28,8 +28,25 @@ export async function runContract(args: {
     address: Address,
     balance: BN,
     config: Cell,
-    lt: BN
+    lt: BN,
+    stack: StackItem[]
 }) {
+
+    // Convert
+    let stack: TVMStackEntry[] = [];
+    for (let s of args.stack) {
+        if (s.type === 'int') {
+            stack.push({ type: 'int', value: s.value.toString(10) });
+        } else if (s.type === 'cell') {
+            stack.push({ type: 'cell', value: s.cell.toBoc({ idx: false }).toString('base64') });
+        } else if (s.type === 'null') {
+            stack.push({ type: 'null' });
+        } else if (s.type === 'slice') {
+            stack.push({ type: 'cell_slice', value: s.cell.toBoc({ idx: false }).toString('base64') });
+        } else {
+            throw Error('Unsupported');
+        }
+    }
 
     // Configure
     let now = Math.floor(Date.now() / 1000);
@@ -68,7 +85,7 @@ export async function runContract(args: {
     ]);
 
     // Execute
-    let result = await executeContract({
+    return await executeContract({
         code: args.code,
         dataCell: args.data,
         stack: [],
@@ -76,7 +93,4 @@ export async function runContract(args: {
         c7,
         debug: false
     });
-    // if (result.ok) {
-    //     result.
-    // }
 }

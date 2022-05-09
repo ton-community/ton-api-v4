@@ -16,7 +16,7 @@ export function handleAccountGetChanged(client: LiteClient) {
             let account = await client.getAccountState(address, mcInfo.id);
 
             // Check if changed
-            if (!account.lastTx || new BN(account.lastTx.lt, 10).lt(lt)) {
+            if (!account.lastTx || new BN(account.lastTx.lt, 10).gt(lt)) {
                 res.status(200)
                     .header('Cache-Control', 'public, max-age=31536000')
                     .send({
@@ -29,6 +29,7 @@ export function handleAccountGetChanged(client: LiteClient) {
                             rootHash: mcInfo.id.rootHash.toString('base64')
                         }
                     });
+                return;
             }
 
             // Not changed

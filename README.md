@@ -15,7 +15,7 @@ WARNING: Beware that testnet API works only with recent blocks and doesn't have 
 Easiest way to selfhost is to use docker:
 
 ```bash
-docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v15
+docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v17
 ```
 
 ## Methods
@@ -182,6 +182,17 @@ GET /block/<seqno>/<address>
         "rootHash": "qZxhIvvQf6CWk7+UkrDWmtRJUIjPP2U4eNtZIkKGYlE="
     }
 }
+```
+
+### Detect if account was changed
+
+```
+GET /block/<seqno>/<address>/changed/<since_lt>
+```
+
+[Example](https://mainnet-v4.tonhubapi.com/block/20435953/EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales/changed/27343787000003)
+```json
+{"changed":true,"block":{"workchain":-1,"seqno":20435953,"shard":"-9223372036854775808","fileHash":"HFflk6uOnOpFc40freTDTPytu9z1zMsRTN6OjruZE/0=","rootHash":"jhnNLXgngcxKNLVsYcdfDZbmEcYAAW9FG1MQdbzv8kU="}}
 ```
 
 ### Run get method of account at block

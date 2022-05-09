@@ -3,7 +3,7 @@ import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from 'ton';
 
-export function handleAccountGetLight(client: LiteClient) {
+export function handleAccountGetLite(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const seqno = parseInt((req.params as any).seqno, 10);

@@ -12,4 +12,4 @@ COPY . .
 RUN yarn build
 
 # Execute
-CMD [ "node", "/app/dist/index.js" ]
+CMD [ "node", "--inspect", "/app/dist/index.js" ]

@@ -18,6 +18,7 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
     log('Starting API...');
     const app = fastify({ logger: process.env.LOG_ENABLE === 'true' });
     app.register(require('@fastify/websocket'));
+    app.register(require('@fastify/cors'), { origin: '*' });
     app.get('/', (req, res) => {
         res.send('Welcome to TON API v4!');
     });

@@ -3134,10 +3134,10 @@ ton-crypto@2.1.0:
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
 
-ton-lite-client@1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.3.0.tgz#695b6266a5f53867f28f98bc834d6d063ce40507"
-  integrity sha512-9hXhCvwrRtCIgNQ9kVnxGPv6EJNub4PIB2+bpTB24TppXUGvEAgNVPMLFCKLrsES+FXvfOS3biWQPj6qojOs3w==
+ton-lite-client@1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.3.1.tgz#65d85b155c9f712285480c1d15f438e27235e14f"
+  integrity sha512-765aJXwen/wDuqn7Hhp3GDU7f5c6BiatBUNzXKxSGEyu8GNI1HxGQlV/8q76MfV4uv79dAPXx8wCPEJ3MdpxEw==
   dependencies:
     "@types/bn.js" "^5.1.0"
     adnl "^0.0.3"
@@ -3146,7 +3146,7 @@ ton-lite-client@1.3.0:
     date-fns "^2.28.0"
     pegjs "^0.10.0"
     teslabot "^1.5.0"
-    ton "^11.2.0"
+    ton "^11.6.1"
     ton-tl "^0.2.1"
 
 ton-tl@^0.2.1:
@@ -3161,7 +3161,7 @@ ton-tl@^0.2.1:
     crc-32 "^1.2.2"
     pegjs "^0.10.0"
 
-ton@11.5.3, ton@^11.2.0:
+ton@11.5.3, ton@^11.6.1:
   version "11.5.3"
   resolved "https://registry.yarnpkg.com/ton/-/ton-11.5.3.tgz#2674041f3756a7c76e6738cc505ecdfc830d4eaa"
   integrity sha512-dpRASH2nbteX1uOdLrNe2fho83F2xuse1yyeKqxZFaJchAOk0PgyQ3NCS+wwpSDl0kkFWEjhNVo9RgUT4x2C0w==

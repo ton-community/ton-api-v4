@@ -15,8 +15,9 @@ export function handleAccountGet(client: LiteClient) {
 
             // Resolve state
             let state: any;
+            let storage: any;
             if (account.state) {
-                let storage = {
+                storage = {
                     lastPaid: account.state.storageStat.lastPaid,
                     duePayment: account.state.storageStat.duePayment ? account.state.storageStat.duePayment.toString(10) : null,
                     used: {
@@ -27,24 +28,22 @@ export function handleAccountGet(client: LiteClient) {
                 };
                 if (account.state.storage.state.type === 'uninit') {
                     state = {
-                        type: 'uninit',
-                        storage
+                        type: 'uninit'
                     };
                 } else if (account.state.storage.state.type === 'active') {
                     state = {
                         type: 'active',
                         code: account.state.storage.state.state.code!.toBoc({ idx: true }).toString('base64'),
-                        data: account.state.storage.state.state.data!.toBoc({ idx: true }).toString('base64'),
-                        storage
+                        data: account.state.storage.state.state.data!.toBoc({ idx: true }).toString('base64')
                     };
                 } else {
                     state = {
                         type: 'frozen',
-                        stateHash: account.state.storage.state.stateHash.toString('base64'),
-                        storage
+                        stateHash: account.state.storage.state.stateHash.toString('base64')
                     };
                 }
             } else {
+                storage = null;
                 state = { type: 'uninit' };
             }
 
@@ -70,7 +69,8 @@ export function handleAccountGet(client: LiteClient) {
                         last: account.lastTx ? {
                             lt: account.lastTx.lt,
                             hash: account.lastTx.hash.toString('base64')
-                        } : null
+                        } : null,
+                        storageStat: storage
                     },
                     block: {
                         workchain: mcInfo.id.workchain,

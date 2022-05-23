@@ -273,14 +273,26 @@ Example:
 ### Get config at block
 
 ```
-GET /block/<seqno>/config
+GET /block/<seqno>/config/:ids
 ```
 
 NOTE: you need to manually parse cell into dict with 32 bit integer keys.
 
-[Example Active](https://mainnet-v4.tonhubapi.com/block/20260051/config)
+[Example](https://mainnet-v4.tonhubapi.com/block/20260051/config/1,3,4)
 ```json
-{"exist":true,"config":{"cell":"te6cckICA2sA...VVVVVVVVVVVVVVVVVVVVVVVxKjDV","address":"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn","globalBalance":{"coins":"5059853249096870767"}}}
+{"exist":true,"config":{"cell":"te6cckEBBQEAUgACA87AAwEBAdQCAEDqw5GhWtBlRHAkrnTVXrXmH4t/zkj2ju9ZgbB+zEwJSgEBZgQAQDMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzPLrCaQ==","address":"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn","globalBalance":{"coins":"5059853249096870767"}}}
+```
+
+### Get account transactions
+```
+GET /account/<address>/tx/:lt/:hash
+```
+
+NOTE: This method always returns at most 20 results.
+[Example](https://mainnet-v4.tonhubapi.com/account/EQCo6VT63H1vKJTiUo6W4M8RrTURCyk5MdbosuL5auEqpz-C/tx/27668319000001/x2_3cqpuYzOC0CZU9bNMfGG84FT_huceZpcrcr2Bvgc)
+
+```json
+{"blocks":[{"workchain":0,"shard":"-9223372036854775808","seqno":25502350,"fileHash":"Z3nAkOC16+HVk8fFCeQEBMgdud7cWgBpAiELMf7yE6E=","rootHash":"LHxxzka0ijhFDBtCzcY++RXhfk5ss7QXUSh3YXA2E84="}],"boc": "te6ccgICAQgAEAAALCgADwAOAA0ADAALAAoACQAIAAcABgAFAAQAAwACAAE.....inN/zJIAeKAjN2zBN0h86GSts5pd6jN9mIEnrkQFAWjA=="}
 ```
 
 ## License

@@ -41,7 +41,7 @@
     "ton": "11.6.1",
     "ton-contract-executor": "0.5.0",
     "ton-crypto": "2.1.0",
-    "ton-lite-client": "1.4.0"
+    "ton-lite-client": "1.5.0"
   },
   "resolutions": {
     "ton": "11.6.1"

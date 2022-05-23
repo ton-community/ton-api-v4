@@ -3134,10 +3134,10 @@ ton-crypto@2.1.0:
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
 
-ton-lite-client@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.4.0.tgz#2d72877b8ab06e0aef17d883027dcc2e66d77bdd"
-  integrity sha512-iFud2jkauaX4fYN3o+JPWSi5EMONBcgo6pr6Dkvg2H8WIzdWRXDyiabH1NmbJ/Ky2A5OaXsnyAabEaz7d2fqrA==
+ton-lite-client@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.5.0.tgz#2a52d37ad60ad3f1601bfc1182c891636d8b2123"
+  integrity sha512-JsXvoMq89M8JYNkU7ACdrOJy3i3PDJD1VvmY/mFIWOpVkJB3j9P7SiizQ8OobIfr506y1zlo8Iw2s28Q1liUdw==
   dependencies:
     "@types/bn.js" "^5.1.0"
     adnl "^0.0.3"

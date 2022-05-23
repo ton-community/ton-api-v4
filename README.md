@@ -7,16 +7,13 @@ Scallable and CDN-friendly HTTP API for TON blockchain.
 There are two public endpoints for this API:
 * `mainnet` - https://mainnet-v4.tonhubapi.com
 * `sandbox` - https://sandbox-v4.tonhubapi.com
-* `testnnet` - https://testnnet-v4.tonhubapi.com
-
-WARNING: Beware that testnet API works only with recent blocks and doesn't have full history.
 
 ## Selfhosting
 
 Easiest way to selfhost is to use docker:
 
 ```bash
-docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v23
+docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v24
 ```
 
 ## Methods

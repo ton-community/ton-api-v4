@@ -11,8 +11,9 @@ import { handleBlockWatchChanged } from './handlers/handleBlockWatchChanged';
 import { handleGetBlock } from './handlers/handleGetBlock';
 import { handleGetBlockLatest } from './handlers/handleGetBlockLatest';
 import { handleGetConfig } from './handlers/handleGetConfig';
+import { handleSend } from './handlers/handleSend';
 
-export async function startApi(client: LiteClient, blockSync: BlockSync) {
+export async function startApi(client: LiteClient, child: { clients: LiteClient[] }[], blockSync: BlockSync) {
 
     // Configure
     log('Starting API...');
@@ -38,6 +39,17 @@ export async function startApi(client: LiteClient, blockSync: BlockSync) {
     app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
     app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
+    app.post('/send', {
+        schema: {
+            body: {
+                type: 'object',
+                properties: {
+                    boc: { type: 'string' }
+                },
+                required: ['boc']
+            }
+        }
+    }, handleSend(child));
 
     // Start
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;

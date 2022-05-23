@@ -20,15 +20,21 @@ export async function createClient() {
         parallelClients = parseInt(process.env.TON_THREADS, 10);
     }
 
-    // Create engine
-    let engines: LiteSingleEngine[] = [];
+    // Create engines
+    let commonClientEngines: LiteSingleEngine[] = [];
+    let child: { clients: LiteClient[] }[] = []
     for (let c of config) {
+        let clients: LiteClient[] = [];
         for (let i = 0; i < parallelClients; i++) {
-            engines.push(new LiteSingleEngine({ host: c.ip, port: c.port, publicKey: c.key }));
+            let engine = new LiteSingleEngine({ host: c.ip, port: c.port, publicKey: c.key });
+            clients.push(new LiteClient({ engine, batchSize: 10 }));
+            commonClientEngines.push(engine);
         }
+        child.push({ clients });
     }
-    let engine = new LiteRoundRobinEngine(engines);
 
     // Create client
-    return new LiteClient({ engine: engine, batchSize: engines.length * 10 });
+    let engine = new LiteRoundRobinEngine(commonClientEngines);
+    let client = new LiteClient({ engine, batchSize: commonClientEngines.length * 10 });
+    return { main: client, child };
 }

@@ -22,12 +22,12 @@ import { log } from "./utils/log";
     //
 
     log('Downloading current state....');
-    let mc = await client.getMasterchainInfoExt();
-    let blockSync = new BlockSync(mc, client);
+    let mc = await client.main.getMasterchainInfoExt();
+    let blockSync = new BlockSync(mc, client.main);
 
     //
     // Start API
     //
 
-    await startApi(client, blockSync);
+    await startApi(client.main, client.child, blockSync);
 })();

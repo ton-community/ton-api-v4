@@ -3134,10 +3134,10 @@ ton-crypto@2.1.0:
     ton-crypto-primitives "2.0.0"
     tweetnacl "1.0.3"
 
-ton-lite-client@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.5.0.tgz#2a52d37ad60ad3f1601bfc1182c891636d8b2123"
-  integrity sha512-JsXvoMq89M8JYNkU7ACdrOJy3i3PDJD1VvmY/mFIWOpVkJB3j9P7SiizQ8OobIfr506y1zlo8Iw2s28Q1liUdw==
+ton-lite-client@1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/ton-lite-client/-/ton-lite-client-1.5.1.tgz#48b6a83ee2277b4037b60de7edcc520a9028dffb"
+  integrity sha512-lXhH3Y/LkCdCDlx/C3zYeaKoee/GFxiEM5N4Jec3FgC7XtsfZe6AXice9tG4TSdwYNfRlFG8ZsFYR3Kg/9r3Rg==
   dependencies:
     "@types/bn.js" "^5.1.0"
     adnl "^0.0.3"
@@ -3147,12 +3147,12 @@ ton-lite-client@1.5.0:
     pegjs "^0.10.0"
     teslabot "^1.5.0"
     ton "^11.6.1"
-    ton-tl "^0.2.1"
+    ton-tl "^0.2.2"
 
-ton-tl@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/ton-tl/-/ton-tl-0.2.1.tgz#8a918b8f38cf531dfcd293dae93a666f5d637f5b"
-  integrity sha512-HUWgpMhjtj2J1qzC1WCSEFNKNeXOqrjzdOVfdvoHX0X7e8w5w0Tr7GKZ40CKX6Wi/lsl6h5JkD/6EJqWB9fl0A==
+ton-tl@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/ton-tl/-/ton-tl-0.2.2.tgz#4ae195cfec9ddec48281529ba5c89b07bc48dcc5"
+  integrity sha512-7T0QZAyIP3w7xFi2+h3c7VBfBQYem6h8J+bS3F8I04qevT5fa9jMkuh4AzbzGQaH8uCcB2D0zZcH4up19CbtnQ==
   dependencies:
     "@types/bn.js" "^5.1.0"
     "@types/pegjs" "^0.10.3"

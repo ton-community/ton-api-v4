@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import { Address } from 'ton';
+import { Address, Cell } from 'ton';
 
 export function handleAccountGet(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -33,8 +33,8 @@ export function handleAccountGet(client: LiteClient) {
                 } else if (account.state.storage.state.type === 'active') {
                     state = {
                         type: 'active',
-                        code: account.state.storage.state.state.code!.toBoc({ idx: true }).toString('base64'),
-                        data: account.state.storage.state.state.data!.toBoc({ idx: true }).toString('base64')
+                        code: account.state.storage.state.state.code ? account.state.storage.state.state.code.toBoc({ idx: true }).toString('base64') : new Cell().toBoc({ idx: false }).toString('base64'),
+                        data: account.state.storage.state.state.data ? account.state.storage.state.state.data.toBoc({ idx: true }).toString('base64') : new Cell().toBoc({ idx: false }).toString('base64'),
                     };
                 } else {
                     state = {

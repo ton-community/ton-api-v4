@@ -12,10 +12,10 @@ describe('runContract', () => {
             throw Error('Invalid state');
         }
         let start = Date.now();
-        let dt = Cell.fromBoc(Buffer.from(contract.account.state.data, 'base64'))[0];
+        let dt = Cell.fromBoc(Buffer.from(contract.account.state.data!, 'base64'))[0];
         let res = await runContract({
             method: 'get_staking_status',
-            code: Cell.fromBoc(Buffer.from(contract.account.state.code, 'base64'))[0],
+            code: Cell.fromBoc(Buffer.from(contract.account.state.code!, 'base64'))[0],
             data: dt,
             address,
             balance: new BN(contract.account.balance.coins, 10),

@@ -7,19 +7,26 @@ import { BN } from 'bn.js';
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
+
+// Mainnet
 enableWorkaround.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toFriendly(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQCY4M6TZYnOMnGBQlqi_nyeaIB1LeBFfGgP4uXQ1VWhales').toFriendly(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQCOj4wEjXUR59Kq0KeXUJouY5iAcujkmwJGsYX7qPnITEAM').toFriendly(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQBI-wGVp_x0VFEjd7m9cEUD3tJ_bnxMSp0Tb9qz757ATEAM').toFriendly(), 'get_staking_status');
+
+// Testnet
 enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1whaLEs').toFriendly(), 'get_staking_status');
 
 // Work-around for staking
 const hotfix = new Map<string, Map<string, (src: StackItem[]) => StackItem[]>>();
-hotfix.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toFriendly(), new Map<string, (src: StackItem[]) => StackItem[]>().set('get_staking_status', (src) => {
-    if (src[2].type === 'int') {
-        if (src[2].value.gtn(Number.MAX_SAFE_INTEGER)) {
-            src[2].value = new BN(Number.MAX_SAFE_INTEGER);
-        }
-    }
-    return src;
-}))
+// hotfix.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toFriendly(), new Map<string, (src: StackItem[]) => StackItem[]>().set('get_staking_status', (src) => {
+//     if (src[2].type === 'int') {
+//         if (src[2].value.gtn(Number.MAX_SAFE_INTEGER)) {
+//             src[2].value = new BN(Number.MAX_SAFE_INTEGER);
+//         }
+//     }
+//     return src;
+// }))
 
 function stackToString(item: StackItem): any {
     if (item.type === 'null') {

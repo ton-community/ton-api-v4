@@ -21,12 +21,12 @@ enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1wh
 const hotfix = new Map<string, Map<string, (src: StackItem[]) => StackItem[]>>();
 // hotfix.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toFriendly(), new Map<string, (src: StackItem[]) => StackItem[]>().set('get_staking_status', (src) => {
 //     if (src[2].type === 'int') {
-//         if (src[2].value.gtn(Number.MAX_SAFE_INTEGER)) {
+//         if (src[2].value.gt(new BN(Number.MAX_SAFE_INTEGER))) {
 //             src[2].value = new BN(Number.MAX_SAFE_INTEGER);
 //         }
 //     }
 //     return src;
-// }))
+// }));
 
 function stackToString(item: StackItem): any {
     if (item.type === 'null') {

@@ -9,6 +9,7 @@ import { handleAccountRun } from './handlers/handleAccountRun';
 import { handleBlockWatch } from './handlers/handleBlockWatch';
 import { handleBlockWatchChanged } from './handlers/handleBlockWatchChanged';
 import { handleGetBlock } from './handlers/handleGetBlock';
+import { handleGetBlockByUtime } from './handlers/handleGetBlockByTime';
 import { handleGetBlockLatest } from './handlers/handleGetBlockLatest';
 import { handleGetConfig } from './handlers/handleGetConfig';
 import { handleGetTransactions } from './handlers/handleGetTransactions';
@@ -40,6 +41,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
     app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
+    app.get('/block/utime/:utime', handleGetBlockByUtime(client));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
 
     // Sending

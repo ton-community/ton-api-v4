@@ -34,6 +34,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/watch', { websocket: true } as any, handleBlockWatch(client, blockSync));
     app.get('/block/watch/changed', { websocket: true } as any, handleBlockWatchChanged(client, blockSync));
     app.get('/block/latest', handleGetBlockLatest(client, blockSync));
+    app.get('/block/utime/:utime', handleGetBlockByUtime(client));
     app.get('/block/:seqno', handleGetBlock(client));
     app.get('/block/:seqno/config', handleGetConfig(client));
     app.get('/block/:seqno/config/:ids', handleGetConfig(client));
@@ -41,7 +42,6 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
     app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
-    app.get('/block/utime/:utime', handleGetBlockByUtime(client));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
 
     // Sending

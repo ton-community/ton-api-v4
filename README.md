@@ -102,6 +102,84 @@ GET /block/<seqno>
 }
 ```
 
+### Get block by unix time
+```
+GET /block/utime/<unix time>
+```
+[Example](https://mainnet-v4.tonhubapi.com/block/utime/1658336750)
+```json
+{
+    "exist": true,
+    "block": {
+        "shards": [
+            {
+                "workchain": -1,
+                "seqno": 22208312,
+                "shard": "-9223372036854775808",
+                "rootHash": "yrIMmfStaS0sy40/FF7jrOMMhNDfl/LNQXFyikLN7Nc=",
+                "fileHash": "G3xxsoHwwBhac1OOtB4N9XIyAe1HZhEcr2DUczD5zgo=",
+                "transactions": [
+                    {
+                        "account": "Ef8zMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM0vF",
+                        "hash": "Wi9oo1nEyfdi+aGKtM5Mp9i9NmmB+dk3Duad2QONCTs=",
+                        "lt": "29722294000001"
+                    },
+                    {
+                        "account": "Ef8zMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzM0vF",
+                        "hash": "FdJL1IXpJ1xh8sgOsCiX2QGSQM7nVMjF8haqnnfpPDs=",
+                        "lt": "29722294000002"
+                    },
+                    {
+                        "account": "Ef80UXx731GHxVr0-LYf3DIViMerdo3uJLAG3ykQZFjXz2kW",
+                        "hash": "4kLj1vN30ENzfhs0fmgIdgV5Q978Bm4seFcrdJ6xVxU=",
+                        "lt": "29722294000001"
+                    },
+                    {
+                        "account": "Ef80UXx731GHxVr0-LYf3DIViMerdo3uJLAG3ykQZFjXz2kW",
+                        "hash": "jwHRVGgnOCTbbyo5uT0S26xrlTYq5lebdb1IVEoR+GQ=",
+                        "lt": "29722294000003"
+                    },
+                    {
+                        "account": "Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn",
+                        "hash": "1/AVsZDncnAbAug+J/L+0fzNIXccFBg1i0EbtciJJw4=",
+                        "lt": "29722294000003"
+                    }
+                ]
+            },
+            {
+                "workchain": 0,
+                "seqno": 27501824,
+                "shard": "-9223372036854775808",
+                "rootHash": "R8HwI7HJMUSrHIoXmnIScYZqkrFeN7w1SIYAtdtCly8=",
+                "fileHash": "IE/RTI/0o0ctUHnOmBpEUNyjP/q/cHX86rMFIjaIUmU=",
+                "transactions": [
+                    {
+                        "account": "EQB5JdVF7RQMlE5amEK2kQ0DF8J7Ykpm_clPgnU19IjBY81O",
+                        "hash": "736NHkWwCJ/lM/u4bE+FkapLAEy8fuDKFkOao/78oO8=",
+                        "lt": "29722293000001"
+                    },
+                    {
+                        "account": "EQB5JdVF7RQMlE5amEK2kQ0DF8J7Ykpm_clPgnU19IjBY81O",
+                        "hash": "KNdrekbyAeTIhVdtTSrRBoRX6tHYRahvlMkSQ6hKCwc=",
+                        "lt": "29722293000007"
+                    },
+                    {
+                        "account": "EQCXxtncmR-OSh1CNtqYDOjm4toQyMcRIWkEQDY_FRLimGZ4",
+                        "hash": "PrEPfMXjjIJ5J6Uuc8TF0g70qOn3Tp53W6Y314ztU08=",
+                        "lt": "29722293000005"
+                    },
+                    {
+                        "account": "EQDWHdEQ7hES-Gc0QxBAWTIZDgvCfoMprovccc4tV7f33keE",
+                        "hash": "il4woJYyVpGGjL8unx6rg/83RSHg099mqANEKXrulbs=",
+                        "lt": "29722293000003"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
 ### Get account state at block
 
 ```

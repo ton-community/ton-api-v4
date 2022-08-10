@@ -19,7 +19,10 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
 
     // Configure
     log('Starting API...');
-    const app = fastify({ logger: process.env.LOG_ENABLE === 'true' });
+    const app = fastify({ 
+        logger: process.env.LOG_ENABLE === 'true',
+        maxParamLength: 500,
+    });
     app.register(require('@fastify/websocket'));
     app.register(require('@fastify/cors'), {
         origin: '*',

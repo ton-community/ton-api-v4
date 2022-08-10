@@ -13,7 +13,7 @@ There are two public endpoints for this API:
 Easiest way to selfhost is to use docker:
 
 ```bash
-docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v35
+docker run -e TON_CONFIG=https://your-config-url -p 3000:3000 tonwhales/ton-api-v4:v37
 ```
 
 ## Methods

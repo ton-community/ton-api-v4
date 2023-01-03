@@ -361,6 +361,18 @@ NOTE: you need to manually parse cell into dict with 32 bit integer keys.
 {"exist":true,"config":{"cell":"te6cckEBBQEAUgACA87AAwEBAdQCAEDqw5GhWtBlRHAkrnTVXrXmH4t/zkj2ju9ZgbB+zEwJSgEBZgQAQDMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzMzPLrCaQ==","address":"Ef9VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVbxn","globalBalance":{"coins":"5059853249096870767"}}}
 ```
 
+### Get account transaction
+```
+GET /block/<seqno>/<address>/tx/<lt>
+```
+```json
+{
+    "block": {"workchain":0,"shard":"-9223372036854775808","seqno":25502350,"fileHash":"Z3nAkOC16+HVk8fFCeQEBMgdud7cWgBpAiELMf7yE6E=","rootHash":"LHxxzka0ijhFDBtCzcY++RXhfk5ss7QXUSh3YXA2E84="},
+    "boc": "te6ccgICAQgAEAAALCgADwAOAA0ADAALAAoACQAIAAcABgAFAAQAAwACAAE.....inN/zJIAeKAjN2zBN0h86GSts5pd6jN9mIEnrkQFAWjA==",
+    "proof": "te6ccgICAQgAEAAALCgADwAOAA0ADAALAAoACQAIAAcABgAFAAQAAwACAAE.....inN/zJIAeKAjN2zBN0h86GSts5pd6jN9mIEnrkQFAWjA=="
+}
+```
+
 ### Get account transactions
 ```
 GET /account/<address>/tx/:lt/:hash

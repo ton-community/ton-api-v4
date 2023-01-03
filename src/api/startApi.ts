@@ -6,6 +6,7 @@ import { handleAccountGet } from './handlers/handleAccountGet';
 import { handleAccountGetChanged } from './handlers/handleAccountGetChanged';
 import { handleAccountGetLite } from './handlers/handleAccountGetLite';
 import { handleAccountRun } from './handlers/handleAccountRun';
+import { handleAccountTransaction } from './handlers/handleAccountTransaction';
 import { handleBlockWatch } from './handlers/handleBlockWatch';
 import { handleBlockWatchChanged } from './handlers/handleBlockWatchChanged';
 import { handleGetBlock } from './handlers/handleGetBlock';
@@ -45,6 +46,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
     app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
+    app.get('/block/:seqno/:address/tx/:lt', handleAccountTransaction(client));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
 
     // Sending

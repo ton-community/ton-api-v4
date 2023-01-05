@@ -20,7 +20,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
 
     // Configure
     log('Starting API...');
-    const app = fastify({ 
+    const app = fastify({
         logger: process.env.LOG_ENABLE === 'true',
         maxParamLength: 500,
     });
@@ -46,7 +46,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
     app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
-    app.get('/block/:seqno/:address/tx/:lt', handleAccountTransaction(client));
+    app.get('/block/:wc/:shard/:seqno/:address/tx/:lt', handleAccountTransaction(client));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
 
     // Sending

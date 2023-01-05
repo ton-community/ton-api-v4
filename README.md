@@ -363,7 +363,7 @@ NOTE: you need to manually parse cell into dict with 32 bit integer keys.
 
 ### Get account transaction
 ```
-GET /block/<seqno>/<address>/tx/<lt>
+GET /block/<wc>/<shard>/<seqno>/<address>/tx/<lt>
 ```
 ```json
 {

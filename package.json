@@ -45,5 +45,6 @@
   },
   "resolutions": {
     "ton": "11.18.2"
-  }
+  },
+  "packageManager": "yarn@3.4.1"
 }

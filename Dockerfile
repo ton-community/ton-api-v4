@@ -4,6 +4,8 @@ WORKDIR /app/
 # Add sources
 COPY package.json /app/
 COPY yarn.lock /app/
+COPY .yarnrc.yml /app/
+COPY .yarn/releases /app/.yarn/releases
 RUN yarn install
 
 # Build

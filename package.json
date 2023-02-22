@@ -2,7 +2,7 @@
   "name": "ton-api-v4",
   "version": "1.0.0",
   "repository": "https://github.com/ton-foundation/ton-api-v4.git",
-  "author": "Steve Korshakov <steve@korshakov.com>",
+  "author": "Whales Corp. <developers@whalescorp.com>",
   "license": "MIT",
   "private": true,
   "main": "dist/index.js",

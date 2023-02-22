@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Whales Corp. 
+ * All Rights Reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 import BN from "bn.js";
 import { Address, beginCell, Cell, StackItem } from "ton";
 import { TVMStackEntry, TVMStackEntryCell, TVMStackEntryCellSlice, TVMStackEntryInt, TVMStackEntryNull, TVMStackEntryTuple, runContract as executeContract } from 'ton-contract-executor';

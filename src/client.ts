@@ -9,6 +9,19 @@
 import { LiteClient, LiteRoundRobinEngine, LiteSingleEngine } from 'ton-lite-client';
 import { fetchConfig } from './utils/fetchConfig';
 
+function shuffleArray(array: any[]): any[] {
+    // Clone the original array to avoid modifying the original
+    const shuffledArray = [...array];
+
+    // Start from the last element and swap it with a random element before it
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[randomIndex]] = [shuffledArray[randomIndex], shuffledArray[i]];
+    }
+
+    return shuffledArray;
+}
+
 export async function createClient() {
 
     // Fetch config
@@ -50,6 +63,8 @@ export async function createClient() {
         }
         engine?.close();
     }
+    // randomise live config so not all v4 instances would work with the same lite server
+    liveConfig = shuffleArray(liveConfig);
 
     // Create engines
     let commonClientEngines: LiteSingleEngine[] = [];

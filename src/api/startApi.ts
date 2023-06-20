@@ -67,9 +67,9 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
             }
         }
     }, handleSend(child));
-
     // Start
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
     await app.listen(port, '0.0.0.0');
     log('API ready on port http://localhost:' + port);
+    return app
 }

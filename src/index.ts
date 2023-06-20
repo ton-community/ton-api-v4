@@ -15,27 +15,40 @@ import { log } from "./utils/log";
 
 (async () => {
 
-    //
-    // Create client
-    //
+    while(true){
+        let app
+        try{
+            //
+            // Create client
+            //
 
-    log('Downloading configuration...');
-    let client = await createClient();
-    if (!client) {
-        return;
+            log('Downloading configuration...');
+            let client = await createClient();
+            if (!client) {
+                return;
+            }
+
+            //
+            // Fetching initial state
+            //
+
+            log('Downloading current state....');
+            let mc = await client.main.getMasterchainInfoExt();
+            let blockSync = new BlockSync(mc, client.main);
+
+            //
+            // Start API
+            //
+
+            app = await startApi(client.main, client.child, blockSync);
+        } catch (e) {
+            console.log(e)
+            console.log("Restarting service")
+            if(app){
+                await app.close()
+            }
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
     }
 
-    //
-    // Fetching initial state
-    //
-
-    log('Downloading current state....');
-    let mc = await client.main.getMasterchainInfoExt();
-    let blockSync = new BlockSync(mc, client.main);
-
-    //
-    // Start API
-    //
-
-    await startApi(client.main, client.child, blockSync);
 })();

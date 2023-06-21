@@ -6,28 +6,56 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {SocketStream} from "@fastify/websocket";
+
 require('dotenv').config();
 
 import { startApi } from "./api/startApi";
 import { createClient } from "./client";
 import { BlockSync } from "./sync/BlockSync";
 import { log } from "./utils/log";
+import {LiteEngine} from "ton-lite-client/dist/engines/engine";
+import {LiteClient} from "ton-lite-client";
 
-(async () => {
+const closeConnections = (connections: SocketStream[] | undefined)=>{
+    connections?.forEach(c=>{
+        try{
+            c.socket.close()
+        } catch (e) {}
+    })
+}
 
-    //
-    // Create client
-    //
+const closeEngine = (engine: LiteEngine | undefined)=>{
+    try{
+        engine?.close()
+    } catch (e){}
+}
 
-    log('Downloading configuration...');
-    let client = await createClient();
-    if (!client) {
-        return;
-    }
+const closeClients = (child: { clients: LiteClient[] }[] | undefined)=>{
+    child?.forEach(c=>c.clients.forEach(cc=>{
+        try{
+            cc.engine.close()
+        } catch (e) {}
+    }))
+}
 
-    //
-    // Fetching initial state
-    //
+const start = async () => {
+    let app, client, blockSync, connections
+
+    try{
+        //
+        // Create client
+        //
+
+        log('Downloading configuration...');
+        client = await createClient();
+        if (!client) {
+            return;
+        }
+
+        //
+        // Fetching initial state
+        //
 
     log('Downloading current state....');
 
@@ -39,17 +67,32 @@ import { log } from "./utils/log";
         console.error('getMasterchainInfoExt Failed');
         return;
     }
-    let blockSync = new BlockSync(mc, client.main);
+    blockSync = new BlockSync(mc, client.main);
 
-    //
-    // Start API
-    //
+        //
+        // Start API
+        //
 
-    await startApi(client.main, client.child, blockSync);
-})();
+        const res = await startApi(client.main, client.child, blockSync);
+        app = res.app
+        connections = res.connections
+        // await new Promise(resolve => setTimeout(resolve, 20000));
+        // throw ("My error")
 
-// catches the exception thrown when trying to connect to a dead liteserver.
-process.on('uncaughtException', function (err) {
-    // Handle the error prevents process exit    
-    console.error('uncaughtException:', err);
-});
+
+    } catch (e) {
+        console.log(e)
+        console.log("closing app")
+        closeConnections(connections)
+        closeEngine(client?.main.engine)
+        closeClients(client?.child)
+        await blockSync?.stop()
+        await app?.close()
+        console.log("app closed")
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        start()
+    }
+
+};
+
+start()

@@ -22,6 +22,7 @@ import { handleGetBlockLatest } from './handlers/handleGetBlockLatest';
 import { handleGetConfig } from './handlers/handleGetConfig';
 import { handleGetTransactions } from './handlers/handleGetTransactions';
 import { handleSend } from './handlers/handleSend';
+import {SocketStream} from "@fastify/websocket";
 
 export async function startApi(client: LiteClient, child: { clients: LiteClient[] }[], blockSync: BlockSync) {
 
@@ -41,9 +42,11 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
         res.send('Welcome to TON API v4!');
     });
 
+    const connections: SocketStream[] = []
+
     // Handlers
-    app.get('/block/watch', { websocket: true } as any, handleBlockWatch(client, blockSync));
-    app.get('/block/watch/changed', { websocket: true } as any, handleBlockWatchChanged(client, blockSync));
+    app.get('/block/watch', { websocket: true } as any, handleBlockWatch(client, blockSync, connections));
+    app.get('/block/watch/changed', { websocket: true } as any, handleBlockWatchChanged(client, blockSync, connections));
     app.get('/block/latest', handleGetBlockLatest(client, blockSync));
     app.get('/block/utime/:utime', handleGetBlockByUtime(client));
     app.get('/block/:seqno', handleGetBlock(client));
@@ -72,4 +75,6 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
     await app.listen(port, '0.0.0.0');
     log('API ready on port http://localhost:' + port);
+
+    return {app, connections}
 }

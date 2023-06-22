@@ -30,7 +30,15 @@ import { log } from "./utils/log";
     //
 
     log('Downloading current state....');
-    let mc = await client.main.getMasterchainInfoExt();
+
+    let mc = await client.main.getMasterchainInfoExt().catch(e => {
+        console.error('getMasterchainInfoExt', e);
+    });
+
+    if (!mc) {
+        console.error('getMasterchainInfoExt Failed');
+        return;
+    }
     let blockSync = new BlockSync(mc, client.main);
 
     //
@@ -39,3 +47,9 @@ import { log } from "./utils/log";
 
     await startApi(client.main, client.child, blockSync);
 })();
+
+// catches the exception thrown when trying to connect to a dead liteserver.
+process.on('uncaughtException', function (err) {
+    // Handle the error prevents process exit    
+    console.error('uncaughtException:', err);
+});

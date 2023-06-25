@@ -56,7 +56,7 @@ export function handleGetBlockByUtime(client: LiteClient) {
                             rootHash: sh.rootHash.toString('base64'),
                             fileHash: sh.fileHash.toString('base64'),
                             transactions: sh.transactions.map((tr) => ({
-                                account: new Address(sh.workchain, tr.account).toFriendly(),
+                                account: new Address(sh.workchain, tr.account).toString(),
                                 hash: tr.hash.toString('base64'),
                                 lt: tr.lt
                             }))

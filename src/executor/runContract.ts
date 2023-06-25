@@ -7,7 +7,7 @@
  */
 
 import BN from "bn.js";
-import { Address, beginCell, Cell, StackItem } from "ton";
+import { Address, beginCell, Cell, TupleItem } from "ton";
 import { TVMStackEntry, TVMStackEntryCell, TVMStackEntryCellSlice, TVMStackEntryInt, TVMStackEntryNull, TVMStackEntryTuple, runContract as executeContract } from 'ton-contract-executor';
 import { randomBytes } from "crypto";
 
@@ -37,7 +37,7 @@ export async function runContract(args: {
     balance: BN,
     config: Cell,
     lt: BN,
-    stack: StackItem[]
+    stack: TupleItem[]
 }) {
 
     // Convert
@@ -60,8 +60,8 @@ export async function runContract(args: {
     let now = Math.floor(Date.now() / 1000);
     let balance = makeTuple([makeIntEntry(args.balance), makeNull()]);
 
-    let addressCell = new Cell();
-    addressCell.bits.writeAddress(args.address);
+    // let addressCell = new Cell();
+    // addressCell.bits.writeAddress(args.address);
 
     let randSeed = randomBytes(32);
 

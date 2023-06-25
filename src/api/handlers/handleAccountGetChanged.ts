@@ -11,6 +11,7 @@ import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from 'ton';
 import { BN } from 'bn.js';
+import {BigintToBN} from "../../utils/convert";
 
 export function handleAccountGetChanged(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -24,7 +25,7 @@ export function handleAccountGetChanged(client: LiteClient) {
             let account = await client.getAccountState(address, mcInfo.id);
 
             // Check if changed
-            if (!account.lastTx || new BN(account.lastTx.lt, 10).gt(lt)) {
+            if (!account.lastTx || BigintToBN(account.lastTx.lt).gt(lt)) {
                 res.status(200)
                     .header('Cache-Control', 'public, max-age=31536000')
                     .send({

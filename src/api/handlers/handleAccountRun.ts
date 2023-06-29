@@ -11,8 +11,7 @@ import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import {Address, Cell, parseTuple, TupleItem, serializeTuple} from 'ton';
 import { runContract } from '../../executor/runContract';
-import { BN } from 'bn.js';
-import {BigintToBN, BNToBigint, cellDictionaryToCell} from "../../utils/convert";
+import {BigintToBN, cellDictionaryToCell} from "../../utils/convert";
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
@@ -142,7 +141,7 @@ export function handleAccountRun(client: LiteClient) {
                         } else if (s.type === 'cell_slice') {
                             resStack.push({ type: 'slice', cell: Cell.fromBoc(Buffer.from(s.value, 'base64'))[0] });
                         } else if (s.type === 'int') {
-                            resStack.push({ type: 'int', value: BNToBigint(new BN(s.value, 10)) });
+                            resStack.push({ type: 'int', value: BigInt(s.value) });
                         } else if (s.type === 'null') {
                             resStack.push({ type: 'null' });
                         } else {

@@ -28,11 +28,11 @@ export function handleAccountGetLite(client: LiteClient) {
             if (account.state) {
                 storage = {
                     lastPaid: account.state.storageStats.lastPaid,
-                    duePayment: account.state.storageStats.duePayment ? account.state.storageStats.duePayment.toString(10) : null,
+                    duePayment: account.state.storageStats.duePayment ? account.state.storageStats.duePayment.toString() : null,
                     used: {
-                        bits: account.state.storageStats.used.bits,
-                        cells: account.state.storageStats.used.cells,
-                        publicCells: account.state.storageStats.used.publicCells
+                        bits: account.state.storageStats.used.bits.toString(),
+                        cells: account.state.storageStats.used.cells.toString(),
+                        publicCells: account.state.storageStats.used.publicCells.toString()
                     }
                 };
                 if (account.state.storage.state.type === 'uninit') {
@@ -48,7 +48,7 @@ export function handleAccountGetLite(client: LiteClient) {
                 } else {
                     state = {
                         type: 'frozen',
-                        stateHash: bigintToBase64(account.state.storage.state.stateHash)
+                        stateHash: account.state.storage.state.stateHash.toString()
                     };
                 }
             } else {
@@ -57,13 +57,12 @@ export function handleAccountGetLite(client: LiteClient) {
             }
 
             // Convert currencies
-            let currencies: { [id: number]: bigint } = {};
+            let currencies: { [id: number]: string } = {};
             if (account.balance.other) {
                 for (let ec of account.balance.other) {
-                    currencies[ec[0]] = ec[1];
+                    currencies[ec[0]] = ec[1].toString();
                 }
             }
-
 
             // Return data
             res.status(200)
@@ -72,11 +71,11 @@ export function handleAccountGetLite(client: LiteClient) {
                     account: {
                         state,
                         balance: {
-                            coins: account.balance.coins.toString(10),
+                            coins: account.balance.coins.toString(),
                             currencies
                         },
                         last: account.lastTx ? {
-                            lt: account.lastTx.lt,
+                            lt: account.lastTx.lt.toString(),
                             hash: bigintToBase64(account.lastTx.hash)
                         } : null,
                         storageStat: storage

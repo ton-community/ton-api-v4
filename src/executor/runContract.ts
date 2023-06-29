@@ -60,9 +60,6 @@ export async function runContract(args: {
     let now = Math.floor(Date.now() / 1000);
     let balance = makeTuple([makeIntEntry(args.balance), makeNull()]);
 
-    // let addressCell = new Cell();
-    // addressCell.bits.writeAddress(args.address);
-
     let randSeed = randomBytes(32);
 
     let c7 = makeTuple([

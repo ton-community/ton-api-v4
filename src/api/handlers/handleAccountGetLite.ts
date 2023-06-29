@@ -48,7 +48,7 @@ export function handleAccountGetLite(client: LiteClient) {
                 } else {
                     state = {
                         type: 'frozen',
-                        stateHash: account.state.storage.state.stateHash.toString()
+                        stateHash: bigintToBase64(account.state.storage.state.stateHash)
                     };
                 }
             } else {

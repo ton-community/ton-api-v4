@@ -2,10 +2,6 @@ import BN from "bn.js";
 import {Dictionary} from "ton-core/dist/dict/Dictionary";
 import {Address, beginCell} from "ton";
 
-export function BigintToBN(num: bigint) {
-    return new BN(num.toString());
-}
-
 export function BNToBigint(num: BN) {
     return BigInt(num.toString());
 }
@@ -26,7 +22,7 @@ export function cellDictionaryToCell(dict: Dictionary<any, any>){
 }
 
 export function uint256ToBuffer32(num: bigint) {
-    let buffer = Buffer.alloc(32); // Создаем пустой буфер размером 32 байта
+    let buffer = Buffer.alloc(32);
     for (let i = 0; i < 32; i++) {
         buffer[31 - i] = Number((num >> BigInt(i * 8)) & BigInt(0xFF));
     }

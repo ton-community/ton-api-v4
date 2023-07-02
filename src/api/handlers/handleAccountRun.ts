@@ -11,7 +11,7 @@ import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import {Address, Cell, parseTuple, TupleItem, serializeTuple} from 'ton';
 import { runContract } from '../../executor/runContract';
-import {BigintToBN, cellDictionaryToCell} from "../../utils/convert";
+import { cellDictionaryToCell} from "../../utils/convert";
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
@@ -126,9 +126,9 @@ export function handleAccountRun(client: LiteClient) {
                     code: state.state.storage.state.state.code!,
                     data: state.state.storage.state.state.data!,
                     address: address,
-                    balance: BigintToBN(state.state.storage.balance.coins),
+                    balance: state.state.storage.balance.coins,
                     config: cellDictionaryToCell(config.config),
-                    lt: BigintToBN(state.state.storage.lastTransLt),
+                    lt: state.state.storage.lastTransLt,
                     stack: []
                 });
 

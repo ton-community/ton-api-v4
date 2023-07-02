@@ -10,22 +10,20 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from 'ton';
-import { BN } from 'bn.js';
-import {BigintToBN} from "../../utils/convert";
 
 export function handleAccountGetChanged(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const seqno = parseInt((req.params as any).seqno, 10);
             const address = Address.parseFriendly((req.params as any).address).address;
-            const lt = new BN((req.params as any).lt, 10);
+            const lt = BigInt((req.params as any).lt);
 
             // Fetch account state
             let mcInfo = (await client.lookupBlockByID({ seqno: seqno, shard: '-9223372036854775808', workchain: -1 }));
             let account = await client.getAccountState(address, mcInfo.id);
 
             // Check if changed
-            if (!account.lastTx || BigintToBN(account.lastTx.lt).gt(lt)) {
+            if (!account.lastTx || account.lastTx.lt>lt) {
                 res.status(200)
                     .header('Cache-Control', 'public, max-age=31536000')
                     .send({

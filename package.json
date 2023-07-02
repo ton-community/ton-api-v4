@@ -10,7 +10,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --declaration",
+    "build": "rm -fr dist && tsc --declaration",
     "dev": "yarn build && node ./dist/index.js",
     "docker": "./docker.sh"
   },

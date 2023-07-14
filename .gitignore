@@ -7,3 +7,10 @@ dist
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+.vscode/
+.DS_Store
+
+yarn.lock
+package-lock.json
+*.sh

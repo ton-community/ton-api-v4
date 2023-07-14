@@ -8,39 +8,39 @@
 
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
-import { log, warn } from "../../utils/log";
-import { Address, Cell, parseStack, serializeStack, StackItem } from 'ton';
+import { warn } from "../../utils/log";
+import {Address, Cell, parseTuple, TupleItem, serializeTuple} from 'ton';
 import { runContract } from '../../executor/runContract';
-import { BN } from 'bn.js';
+import { cellDictionaryToCell} from "../../utils/convert";
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
 
 // Mainnet
-enableWorkaround.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQCY4M6TZYnOMnGBQlqi_nyeaIB1LeBFfGgP4uXQ1VWhales').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQCOj4wEjXUR59Kq0KeXUJouY5iAcujkmwJGsYX7qPnITEAM').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQBI-wGVp_x0VFEjd7m9cEUD3tJ_bnxMSp0Tb9qz757ATEAM').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDFvnxuyA2ogNPOoEj1lu968U4PP8_FzJfrOWUsi_o1CLUB').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQA_cc5tIQ4haNbMVFUD1d0bNRt17S7wgWEqfP_xEaTACLUB').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQBYtJtQzU3M-AI23gFM91tW6kYlblVtjej59gS8P3uJ_ePN').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQCpCjQigwF27KQ588VhQv9jm_DUuL_ZLY3HCf_9yZW5_ePN').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDkCrGT_lwaKXZf6y3YuJI213PrH60JqoQQO-GT2VMorgen').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQBWc3jORk0evkkZYV4OanMhcfJEyz_mN7rQWYM7wiMorgen').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQAA_5_dizuA1w6OpzTSYvXhvUwYTDNTW_MZDdZ0CGKeeper').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDvvBmP3wUcjoXPY1jHfT4-fgb294imVYH5EHdLnAKeeper').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDhGXtbR6ejNQucRcoyzwiaF2Ke-5T8reptsiuZ_mLockup').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDg5ThqQ1t9eriIv2HkH6XUiUs_Wd4YmXZeGpnPzwLockup').toFriendly(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQCY4M6TZYnOMnGBQlqi_nyeaIB1LeBFfGgP4uXQ1VWhales').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQCOj4wEjXUR59Kq0KeXUJouY5iAcujkmwJGsYX7qPnITEAM').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQBI-wGVp_x0VFEjd7m9cEUD3tJ_bnxMSp0Tb9qz757ATEAM').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQDFvnxuyA2ogNPOoEj1lu968U4PP8_FzJfrOWUsi_o1CLUB').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQA_cc5tIQ4haNbMVFUD1d0bNRt17S7wgWEqfP_xEaTACLUB').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQBYtJtQzU3M-AI23gFM91tW6kYlblVtjej59gS8P3uJ_ePN').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQCpCjQigwF27KQ588VhQv9jm_DUuL_ZLY3HCf_9yZW5_ePN').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQDkCrGT_lwaKXZf6y3YuJI213PrH60JqoQQO-GT2VMorgen').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQBWc3jORk0evkkZYV4OanMhcfJEyz_mN7rQWYM7wiMorgen').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQAA_5_dizuA1w6OpzTSYvXhvUwYTDNTW_MZDdZ0CGKeeper').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQDvvBmP3wUcjoXPY1jHfT4-fgb294imVYH5EHdLnAKeeper').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQDhGXtbR6ejNQucRcoyzwiaF2Ke-5T8reptsiuZ_mLockup').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQDg5ThqQ1t9eriIv2HkH6XUiUs_Wd4YmXZeGpnPzwLockup').toString(), 'get_staking_status');
 
 // Testnet
-enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1whaLEs').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQDsPXQhe6Jg5hZYATRfYwne0o_RbReMG2P3zHfcFUwHALeS').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQCkXp5Z3tJ_eAjFG_0xbbfx2Oh_ESyY6Nk56zARZDwhales').toFriendly(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQDV1LTU0sWojmDUV4HulrlYPpxLWSUjM6F3lUurMbwhales').toFriendly(), 'get_staking_status');
+enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1whaLEs').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('kQDsPXQhe6Jg5hZYATRfYwne0o_RbReMG2P3zHfcFUwHALeS').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('kQCkXp5Z3tJ_eAjFG_0xbbfx2Oh_ESyY6Nk56zARZDwhales').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('kQDV1LTU0sWojmDUV4HulrlYPpxLWSUjM6F3lUurMbwhales').toString(), 'get_staking_status');
 
 // Work-around for staking
-const hotfix = new Map<string, Map<string, (src: StackItem[]) => StackItem[]>>();
-// hotfix.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toFriendly(), new Map<string, (src: StackItem[]) => StackItem[]>().set('get_staking_status', (src) => {
+const hotfix = new Map<string, Map<string, (src: TupleItem[]) => TupleItem[]>>();
+// hotfix.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toString(), new Map<string, (src: TupleItem[]) => TupleItem[]>().set('get_staking_status', (src) => {
 //     if (src[2].type === 'int') {
 //         if (src[2].value.gt(new BN(Number.MAX_SAFE_INTEGER))) {
 //             src[2].value = new BN(Number.MAX_SAFE_INTEGER);
@@ -49,7 +49,7 @@ const hotfix = new Map<string, Map<string, (src: StackItem[]) => StackItem[]>>()
 //     return src;
 // }));
 
-function stackToString(item: StackItem): any {
+function stackToString(item: TupleItem): any {
     if (item.type === 'null') {
         return { type: 'null' };
     } else if (item.type === 'builder') {
@@ -77,16 +77,16 @@ export function handleAccountRun(client: LiteClient) {
             const command = (req.params as any).command as string;
             const args = (req.params as any).args as string | undefined;
             const parsedArgs = args && args.length > 0 ? Buffer.from(args, 'base64') : Buffer.alloc(0);
-            let stackArgs: StackItem[] = [];
+            let stackArgs: TupleItem[] = [];
             if (parsedArgs.length > 0) {
-                stackArgs = parseStack(Cell.fromBoc(parsedArgs)[0]);
+                stackArgs = parseTuple(Cell.fromBoc(parsedArgs)[0]);
             }
 
             // Fetch account state
             let mcInfo = (await client.lookupBlockByID({ seqno: seqno, shard: '-9223372036854775808', workchain: -1 }));
 
             // Enable work-around for some contracts
-            let wa = enableWorkaround.get(address.toFriendly());
+            let wa = enableWorkaround.get(address.toString());
             if (wa === command) {
                 let state = await client.getAccountState(address, mcInfo.id);
 
@@ -127,28 +127,28 @@ export function handleAccountRun(client: LiteClient) {
                     data: state.state.storage.state.state.data!,
                     address: address,
                     balance: state.state.storage.balance.coins,
-                    config: config.config,
+                    config: cellDictionaryToCell(config.config),
                     lt: state.state.storage.lastTransLt,
                     stack: []
                 });
 
                 // Handle response
                 if (executionResult.ok) {
-                    let resStack: StackItem[] = [];
+                    let resStack: TupleItem[] = [];
                     for (let s of executionResult.stack) {
                         if (s.type === 'cell') {
                             resStack.push({ type: 'cell', cell: Cell.fromBoc(Buffer.from(s.value, 'base64'))[0] });
                         } else if (s.type === 'cell_slice') {
                             resStack.push({ type: 'slice', cell: Cell.fromBoc(Buffer.from(s.value, 'base64'))[0] });
                         } else if (s.type === 'int') {
-                            resStack.push({ type: 'int', value: new BN(s.value, 10) });
+                            resStack.push({ type: 'int', value: BigInt(s.value) });
                         } else if (s.type === 'null') {
                             resStack.push({ type: 'null' });
                         } else {
                             throw Error('Unknown stack item')
                         }
                     }
-                    let hf = hotfix.get(address.toFriendly());
+                    let hf = hotfix.get(address.toString());
                     if (hf) {
                         let hff = hf.get(command);
                         if (hff) {
@@ -161,7 +161,7 @@ export function handleAccountRun(client: LiteClient) {
                             arguments: stackArgs.map(stackToString),
                             result: resStack.map(stackToString),
                             exitCode: executionResult.exit_code!,
-                            resultRaw: serializeStack(resStack).toBoc({ idx: false }).toString('base64'),
+                            resultRaw: serializeTuple(resStack).toBoc({ idx: false }).toString('base64'),
                             block: {
                                 workchain: state.block.workchain,
                                 seqno: state.block.seqno,
@@ -207,7 +207,7 @@ export function handleAccountRun(client: LiteClient) {
 
             // Normal execution
             let result = await client.runMethod(address, command, parsedArgs, mcInfo.id);
-            let resultParsed = result.result ? parseStack(Cell.fromBoc(Buffer.from(result.result!, 'base64'))[0]) : null;
+            let resultParsed = result.result ? parseTuple(Cell.fromBoc(Buffer.from(result.result!, 'base64'))[0]) : null;
 
             // Return data
             res.status(200)

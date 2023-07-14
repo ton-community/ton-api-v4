@@ -6,7 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import BN from "bn.js";
 import { Address, Cell, TonClient4 } from "ton";
 import { runContract } from "./runContract";
 
@@ -26,9 +25,9 @@ describe('runContract', () => {
             code: Cell.fromBoc(Buffer.from(contract.account.state.code!, 'base64'))[0],
             data: dt,
             address,
-            balance: new BN(contract.account.balance.coins, 10),
+            balance: BigInt(contract.account.balance.coins),
             config: Cell.fromBoc(Buffer.from(config.config.cell, 'base64'))[0],
-            lt: new BN(contract.account.last!.lt, 10),
+            lt: BigInt(contract.account.last!.lt),
             stack: []
         });
         console.warn('executed in ' + (Date.now() - start) + ' ms');

@@ -7,7 +7,10 @@
  */
 
 import { Address, Cell, TonClient4 } from "ton";
+import { Address as AddressNew, Cell as CellNew  } from "ton-core";
 import { runContract } from "./runContract";
+
+jest.setTimeout(10000)
 
 describe('runContract', () => {
     it('should execute contract', async () => {
@@ -22,11 +25,11 @@ describe('runContract', () => {
         let dt = Cell.fromBoc(Buffer.from(contract.account.state.data!, 'base64'))[0];
         let res = await runContract({
             method: 'get_staking_status',
-            code: Cell.fromBoc(Buffer.from(contract.account.state.code!, 'base64'))[0],
-            data: dt,
-            address,
+            code: CellNew.fromBoc(Buffer.from(contract.account.state.code!, 'base64'))[0],
+            data: CellNew.fromBoc(dt.toBoc())[0],
+            address: AddressNew.parse(address.toString()),
             balance: BigInt(contract.account.balance.coins),
-            config: Cell.fromBoc(Buffer.from(config.config.cell, 'base64'))[0],
+            config: CellNew.fromBoc(Buffer.from(config.config.cell, 'base64'))[0],
             lt: BigInt(contract.account.last!.lt),
             stack: []
         });

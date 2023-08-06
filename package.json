@@ -12,7 +12,8 @@
   "scripts": {
     "build": "rm -fr dist && tsc --declaration",
     "dev": "yarn build && node ./dist/index.js",
-    "docker": "./docker.sh"
+    "docker": "./docker.sh",
+    "test": "jest"
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.0",

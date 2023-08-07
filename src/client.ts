@@ -29,35 +29,13 @@ export async function createClient() {
         parallelClients = parseInt(process.env.TON_THREADS, 10);
     }
 
-    // filter out live config only
-    let liveConfig = [];
-
-    for (let c of config) {
-        let engine: LiteSingleEngine | undefined;
-        try {
-            engine = new LiteSingleEngine({ host: c.ip, port: c.port, publicKey: c.key });
-            let client = new LiteClient({ engine, batchSize: 10 });
-            const working: any = await client.getMasterchainInfo()
-            // .catch(e => {
-            //     engine.close();
-            //     console.error('getMasterchainInfo', e);
-            // });
-            if (working.kind) {
-                liveConfig.push(c)
-            }
-        } catch (e) {
-            console.error(e, `Failed to connect to ${c.ip}:${c.port}`);
-        }
-        engine?.close();
-    }
-
     // Create engines
     let commonClientEngines: LiteSingleEngine[] = [];
     let child: { clients: LiteClient[] }[] = []
-    for (let c of liveConfig) {
+    for (let c of config) {
         let clients: LiteClient[] = [];
         for (let i = 0; i < parallelClients; i++) {
-            let engine = new LiteSingleEngine({ host: c.ip, port: c.port, publicKey: c.key });
+            let engine = new LiteSingleEngine({ host: `https://${c.ip}:${c.port}`, publicKey: c.key });
             clients.push(new LiteClient({ engine, batchSize: 10 }));
             commonClientEngines.push(engine);
         }

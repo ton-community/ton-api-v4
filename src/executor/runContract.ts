@@ -6,8 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import BN from "bn.js";
-import { Address, beginCell, Cell, StackItem } from "ton";
+import { Address, beginCell, Cell, TupleItem } from "ton";
 import { TVMStackEntry, TVMStackEntryCell, TVMStackEntryCellSlice, TVMStackEntryInt, TVMStackEntryNull, TVMStackEntryTuple, runContract as executeContract } from 'ton-contract-executor';
 import { randomBytes } from "crypto";
 
@@ -23,7 +22,7 @@ import { randomBytes } from "crypto";
 //     my_addr,                                    //  myself:MsgAddressInt
 //     vm::StackEntry::maybe(cfg.global_config));  //  global_config:(Maybe Cell) ] = SmartContractInfo;
 
-const makeIntEntry = (value: number | BN): TVMStackEntryInt => ({ type: 'int', value: value.toString(10) });
+const makeIntEntry = (value: number | bigint): TVMStackEntryInt => ({ type: 'int', value: value.toString() });
 const makeTuple = (items: TVMStackEntry[]): TVMStackEntryTuple => ({ type: 'tuple', value: items });
 const makeNull = (): TVMStackEntryNull => ({ type: 'null' });
 const makeCell = (cell: Cell): TVMStackEntryCell => ({ type: 'cell', value: cell.toBoc({ idx: false }).toString('base64') });
@@ -34,10 +33,10 @@ export async function runContract(args: {
     code: Cell,
     data: Cell,
     address: Address,
-    balance: BN,
+    balance: bigint,
     config: Cell,
-    lt: BN,
-    stack: StackItem[]
+    lt: bigint,
+    stack: TupleItem[]
 }) {
 
     // Convert
@@ -60,9 +59,6 @@ export async function runContract(args: {
     let now = Math.floor(Date.now() / 1000);
     let balance = makeTuple([makeIntEntry(args.balance), makeNull()]);
 
-    let addressCell = new Cell();
-    addressCell.bits.writeAddress(args.address);
-
     let randSeed = randomBytes(32);
 
     let c7 = makeTuple([
@@ -80,7 +76,7 @@ export async function runContract(args: {
             // trans_lt:Integer
             makeIntEntry(args.lt),
             // rand_seed:Integer
-            makeIntEntry(new BN(randSeed)),
+            makeIntEntry(BigInt(`0x${randSeed.toString('hex')}`)),
             // balance_remaining:[Integer (Maybe Cell)]
             balance,
             // myself:MsgAddressInt
@@ -96,7 +92,7 @@ export async function runContract(args: {
     return await executeContract({
         code: args.code,
         dataCell: args.data,
-        stack: [],
+        stack,
         method: args.method,
         c7,
         debug: false

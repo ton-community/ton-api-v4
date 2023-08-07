@@ -7,3 +7,6 @@ dist
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+.vscode/
+.DS_Store

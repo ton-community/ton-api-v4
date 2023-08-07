@@ -8,7 +8,6 @@
 
 import { BN } from "bn.js";
 import EventEmitter from "events";
-import { number } from "fp-ts";
 import { delay, InvalidateSync } from "teslabot";
 import { Address } from "ton";
 import { LiteClient } from "ton-lite-client";
@@ -37,7 +36,7 @@ function convertBlockFull(seqno: number, src: {
     let changed: { [key: string]: { lt: string, hash: string } } = {};
     for (let s of src.shards) {
         for (let t of s.transactions) {
-            let addr = new Address(s.workchain, t.account).toFriendly();
+            let addr = new Address(s.workchain, t.account).toString();
             let ex = changed[addr];
             if (ex) {
                 if (new BN(t.lt).gt(new BN(ex.lt))) {

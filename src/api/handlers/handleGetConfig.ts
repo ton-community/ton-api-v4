@@ -7,9 +7,11 @@
  */
 
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Cell, parseDictRefs, serializeDict, Slice } from 'ton';
+import {beginCell, Cell, Slice} from 'ton';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
+import {cellDictionaryToCell, uint256ToAddress} from "../../utils/convert";
+import {serializeDict} from "ton-core/dist/dict/serializeDict";
 
 export function handleGetConfig(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -47,18 +49,20 @@ export function handleGetConfig(client: LiteClient) {
             // Filter out
             let cell: Cell;
             if (ids && ids.length > 0) {
-                let parsed = parseDictRefs(config.config.beginParse(), 32);
-                let dict = new Map<string, Slice>();
+                let parsed = config.config;
+                let dict = new Map<bigint, Slice>();
                 for (let i of ids) {
-                    let key = i + '';
-                    let ex = parsed.get(i + '');
+                    let key = BigInt(i);
+                    let ex = parsed.get(i);
                     if (ex) {
-                        dict.set(key, ex);
+                        dict.set(key, ex.asSlice());
                     }
                 }
-                cell = serializeDict(dict, 32, (src, dst) => dst.refs.push(src.toCell()));
+                const builder = beginCell()
+                serializeDict(dict, 32, (src, dst) => dst.storeRef(src.asCell()), builder);
+                cell = builder.endCell()
             } else {
-                cell = config.config;
+                cell = cellDictionaryToCell(config.config)
             }
 
             // Return data
@@ -68,9 +72,9 @@ export function handleGetConfig(client: LiteClient) {
                     exist: true,
                     config: {
                         cell: cell.toBoc({ idx: false }).toString('base64'),
-                        address: config.configAddress.toFriendly(),
+                        address: uint256ToAddress(config.configAddress, -1).toString(),
                         globalBalance: {
-                            coins: config.globalBalance.coins.toString(10)
+                            coins: config.globalBalance.coins.toString()
                         }
                     }
                 });

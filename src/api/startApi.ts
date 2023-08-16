@@ -53,6 +53,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
     app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
+    app.post('/block/:seqno/:address/run/:command', handleAccountRun(client));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
 
     // Sending

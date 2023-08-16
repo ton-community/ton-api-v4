@@ -75,7 +75,7 @@ export function handleAccountRun(client: LiteClient) {
             const seqno = parseInt((req.params as any).seqno, 10);
             const address = Address.parseFriendly((req.params as any).address).address;
             const command = (req.params as any).command as string;
-            const args = (req.params as any).args as string | undefined;
+            const args = (req.method.toLowerCase() === 'get' ? (req.params as any).args : (typeof req.body === 'string' ? req.body : undefined)) as string | undefined;
             const parsedArgs = args && args.length > 0 ? Buffer.from(args, 'base64') : Buffer.alloc(0);
             let stackArgs: TupleItem[] = [];
             if (parsedArgs.length > 0) {

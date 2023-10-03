@@ -56,7 +56,7 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
     app.post('/block/:seqno/:address/run/:command', handleAccountRun(client));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
-    app.get('/account/:address/tx/parsed/:lt/:hash', handleGetParsedTransactions(client));
+    app.get('/account/:address/tx/parsed/:lt/:hash/:count?', handleGetParsedTransactions(client));
 
     // Sending
     app.post('/send', {

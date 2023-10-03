@@ -767,6 +767,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ton/core@npm:^0.52.2":
+  version: 0.52.2
+  resolution: "@ton/core@npm:0.52.2"
+  dependencies:
+    symbol.inspect: 1.0.1
+  peerDependencies:
+    "@ton/crypto": ">=3.2.0"
+  checksum: abd6214a631a398f751dca1562a3f2ee44a5e6ac4582faf9d63d08298f4aeb118a78f91c342f73fa4984f94c97888aa1ff123981081629a2455853f699ec8d05
+  languageName: node
+  linkType: hard
+
+"@ton/crypto-primitives@npm:2.0.0":
+  version: 2.0.0
+  resolution: "@ton/crypto-primitives@npm:2.0.0"
+  dependencies:
+    jssha: 3.2.0
+  checksum: 1a686b04dc1430792341339f0ddc1e2f5effd94d31ae118baf2c510e074201495801787b2ca881a6ceb587f89212eb081ec9e3979d374d9c9004c6c4b61fc591
+  languageName: node
+  linkType: hard
+
+"@ton/crypto@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@ton/crypto@npm:3.2.0"
+  dependencies:
+    "@ton/crypto-primitives": 2.0.0
+    jssha: 3.2.0
+    tweetnacl: 1.0.3
+  checksum: 0851fad506796573ec6079c1f36d3d07f4070abb90a4a2f3e621f6b2b2c6725c13096a5afdabb24611aa2a063ba335dcbc742e98a3c1cd0bbf3645ae55c1a8c6
+  languageName: node
+  linkType: hard
+
+"@ton/ton@npm:^13.7.0":
+  version: 13.7.0
+  resolution: "@ton/ton@npm:13.7.0"
+  dependencies:
+    axios: ^0.25.0
+    dataloader: ^2.0.0
+    symbol.inspect: 1.0.1
+    teslabot: ^1.3.0
+    zod: ^3.21.4
+  peerDependencies:
+    "@ton/core": ">=0.51.0"
+    "@ton/crypto": ">=3.2.0"
+  checksum: 6cf8c9c8dc64c5d23fe92be8c7397b0fb82d62c5e50098613f9d7fe0dfd12046afa8d55dd6054efaab9015fa1757ed2fbfea01c273e1bdd72df33597ad160c57
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:1":
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
@@ -4616,6 +4663,9 @@ __metadata:
   dependencies:
     "@fastify/cors": ^7.0.0
     "@fastify/websocket": ^5.0.0
+    "@ton/core": ^0.52.2
+    "@ton/crypto": ^3.2.0
+    "@ton/ton": ^13.7.0
     "@types/bn.js": ^5.1.0
     "@types/jest": ^27.0.1
     "@types/node": ^16.7.10

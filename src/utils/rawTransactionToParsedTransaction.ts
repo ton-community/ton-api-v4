@@ -6,7 +6,7 @@ type ParsedAddressExternal = {
     data: string;
 };
 
-export type TxBody = { type: 'comment', comment: string } | { type: 'payload', cell: Cell };
+export type TxBody = { type: 'comment', comment: string } | { type: 'payload', cell: string };
 
 type ParsedMessageInfo = {
     type: 'internal';
@@ -109,7 +109,7 @@ export function parseBody(cell: Cell): TxBody | null {
     }
 
     // Binary payload
-    return { type: 'payload', cell };
+    return { type: 'payload', cell: cell.toBoc({ idx: false }).toString('base64') };
 }
 
 function messageInfoToParsed(msgInfo: CommonMessageInfo, isTestnet: boolean): ParsedMessageInfo {

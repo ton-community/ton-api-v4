@@ -1,7 +1,7 @@
 import { TxBody, parseBody } from "./rawTransactionToParsedTransaction";
 import { SupportedMessageType, parseMessageBody } from "./parseMessageBody";
 import { formatSupportedBody } from "./formatSupportedBody";
-import { Address } from "@ton/core";
+import { Address, Cell } from "@ton/core";
 
 export type ParsedOperationItem = {kind: 'ton', amount: string;} | {kind: 'token',amount: string;
 };
@@ -39,7 +39,7 @@ export function resolveOperation(args: {
 
     // Simple payload overwrite
     if (args.body && args.body.type === 'payload') {
-        let parsedBody = parseMessageBody(args.body.cell);
+        let parsedBody = parseMessageBody(Cell.fromBoc(Buffer.from(args.body.cell, 'base64'))[0]);
         if (parsedBody) {
             let f = formatSupportedBody(parsedBody);
             if (f) {

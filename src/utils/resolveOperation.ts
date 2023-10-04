@@ -3,8 +3,7 @@ import { SupportedMessageType, parseMessageBody } from "./parseMessageBody";
 import { formatSupportedBody } from "./formatSupportedBody";
 import { Address, Cell } from "@ton/core";
 
-export type ParsedOperationItem = {kind: 'ton', amount: string;} | {kind: 'token',amount: string;
-};
+export type ParsedOperationItem = { kind: 'ton', amount: string; } | { kind: 'token', amount: string; };
 
 export type Op = { type: SupportedMessageType, options?: { [key: string]: string } }
 

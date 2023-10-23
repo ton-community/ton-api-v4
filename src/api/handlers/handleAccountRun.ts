@@ -159,11 +159,11 @@ export function handleAccountRun(client: LiteClient) {
                 // Execute
                 let executionResult = await runContract({
                     method: command,
-                    code: CellNew.fromBoc(state.state.storage.state.state.code!.toBoc())[0],
-                    data: CellNew.fromBoc(state.state.storage.state.state.data!.toBoc())[0],
-                    address: AddressNew.parse(address.toString()),
+                    code: Cell.fromBoc(state.state.storage.state.state.code!.toBoc())[0],
+                    data: Cell.fromBoc(state.state.storage.state.state.data!.toBoc())[0],
+                    address: Address.parse(address.toString()),
                     balance: state.state.storage.balance.coins,
-                    config: CellNew.fromBoc(cellDictionaryToCell(config.config).toBoc())[0],
+                    config: Cell.fromBoc(cellDictionaryToCell(config.config).toBoc())[0],
                     lt: state.state.storage.lastTransLt,
                     stack: []
                 });

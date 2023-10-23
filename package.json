@@ -29,9 +29,9 @@
   "dependencies": {
     "@fastify/cors": "^7.0.0",
     "@fastify/websocket": "^5.0.0",
-    "@ton/sandbox": "^0.11.0",
     "@ton/core": "^0.52.2",
     "@ton/crypto": "^3.2.0",
+    "@ton/sandbox": "^0.11.0",
     "@ton/ton": "^13.7.0",
     "axios": "^0.25.0",
     "bn.js": "5.2.0",

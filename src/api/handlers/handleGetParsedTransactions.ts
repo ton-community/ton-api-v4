@@ -15,13 +15,14 @@ import { Address, Cell, loadTransaction } from '@ton/ton';
 export function handleGetParsedTransactions(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
-            let params = (req.params as { address: string, lt: string, hash: string, count?: number });
+            let params = (req.params as { address: string, lt: string, hash: string });
+            let count = (req.query as any)?.count ? parseInt((req.query as any)?.count) : 20;
             let address = Address.parse(params.address);
             let lt = params.lt;
             let hash = Buffer.from(params.hash, 'base64');
 
             // Request
-            let transactions = await client.getAccountTransactions(address, lt, hash, params.count ?? 20);
+            let transactions = await client.getAccountTransactions(address, lt, hash, count);
 
             let cells = Cell.fromBoc(transactions.transactions);
             let parsedTransactions: ParsedTransaction[] = [];

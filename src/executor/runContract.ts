@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Address, beginCell, Cell, TupleItem } from "ton";
+import { Address, beginCell, Cell, TupleItem } from "@ton/core";
 import { TVMStackEntry, TVMStackEntryCell, TVMStackEntryCellSlice, TVMStackEntryInt, TVMStackEntryNull, TVMStackEntryTuple, runContract as executeContract } from 'ton-contract-executor';
 import { randomBytes } from "crypto";
 

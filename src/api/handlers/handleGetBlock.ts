@@ -7,7 +7,7 @@
  */
 
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Address } from 'ton';
+import { Address } from '@ton/core';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 

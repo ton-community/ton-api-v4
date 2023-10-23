@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Address, Cell, TupleItem } from "ton-core";
+import { Address, Cell, TupleItem } from "@ton/core";
 import { Blockchain, BlockchainSnapshot, SmartContractSnapshot, createShardAccount, LogsVerbosity } from "@ton/sandbox";
 import { randomBytes } from "crypto";
 // auto tuple = vm::make_tuple_ref(

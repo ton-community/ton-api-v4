@@ -1,6 +1,5 @@
 import BN from "bn.js";
-import { Dictionary } from "ton-core/dist/dict/Dictionary";
-import { Address, beginCell } from "ton";
+import { Address, beginCell, Dictionary } from "@ton/core";
 
 export function BNToBigint(num: BN) {
     return BigInt(num.toString());
@@ -33,7 +32,7 @@ export function uint256ToAddress(num: bigint, workchain: number = 0) {
     return new Address(workchain, uint256ToBuffer32(num))
 }
 
-export function safeBigIntToNumber(bigIntValue: bigint): Number | string {
+export function safeBigIntToNumber(bigIntValue: bigint): Number {
     if (bigIntValue <= Number.MAX_SAFE_INTEGER) {
         return Number(bigIntValue);
     } else {

@@ -9,10 +9,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import { Address, Cell, parseTuple, TupleItem, serializeTuple} from 'ton';
+import { Address, Cell, parseTuple, TupleItem, serializeTuple } from '@ton/core';
 import { runContract } from '../../executor/runContract';
 import { cellDictionaryToCell } from "../../utils/convert";
-import { Address as AddressNew, Cell as CellNew  } from "ton-core";
 import { Cacheable } from 'cache-flow';
 
 // Temporary work-around
@@ -73,7 +72,7 @@ function stackToString(item: TupleItem): any {
 
 class CachedClient {
     @Cacheable({
-        options: {expirationTime: 2, maxSize: 1000},
+        options: { expirationTime: 2, maxSize: 1000 },
         argsToKey: (address: Address, mcInfoId: any) => [
             address.toString(),
             mcInfoId.kind,
@@ -83,14 +82,14 @@ class CachedClient {
             mcInfoId.rootHash,
             mcInfoId.fileHash
         ],
-        serialize: (result) => {return result},
+        serialize: (result) => { return result },
     })
     public static async getAccountStateCached(client: LiteClient, address: Address, mcInfoId: any) {
         return await client.getAccountState(address, mcInfoId)
     }
 
     @Cacheable({
-        options: {expirationTime: 2, maxSize: 1000},
+        options: { expirationTime: 2, maxSize: 1000 },
         argsToKey: (block: any) => [
             block.kind,
             block.workchain,
@@ -99,7 +98,7 @@ class CachedClient {
             block.rootHash,
             block.fileHash
         ],
-        serialize: (result) => {return result},
+        serialize: (result) => { return result },
     })
     public static async getConfig(client: LiteClient, block: any) {
         return await client.getConfig(block)
@@ -112,7 +111,7 @@ export function handleAccountRun(client: LiteClient) {
             const seqno = parseInt((req.params as any).seqno, 10);
             const address = Address.parseFriendly((req.params as any).address).address;
             const command = (req.params as any).command as string;
-            const args = (req.params as any).args as string | undefined;
+            const args = (req.method.toLowerCase() === 'get' ? (req.params as any).args : (typeof req.body === 'string' ? req.body : undefined)) as string | undefined;
             const parsedArgs = args && args.length > 0 ? Buffer.from(args, 'base64') : Buffer.alloc(0);
             let stackArgs: TupleItem[] = [];
             if (parsedArgs.length > 0) {

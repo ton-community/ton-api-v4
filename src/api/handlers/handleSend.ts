@@ -7,9 +7,9 @@
  */
 
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { Cell } from 'ton';
 import { LiteClient } from "ton-lite-client";
 import { warn } from '../../utils/log';
+import { Cell } from '@ton/core';
 
 export function handleSend(clients: { clients: LiteClient[] }[]) {
     return async (req: FastifyRequest, res: FastifyReply) => {

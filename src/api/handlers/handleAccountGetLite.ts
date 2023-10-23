@@ -9,7 +9,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import { Address } from 'ton';
+import { Address } from '@ton/core';
 import { bigintToBase64, safeBigIntToNumber } from "../../utils/convert";
 
 export function handleAccountGetLite(client: LiteClient) {

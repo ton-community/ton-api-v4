@@ -1,6 +1,5 @@
 import BN from "bn.js";
-import { Dictionary } from "ton-core/dist/dict/Dictionary";
-import { Address } from "ton";
+import { Address, Dictionary } from "@ton/core";
 import {
     BNToBigint,
     bigintToBase64,

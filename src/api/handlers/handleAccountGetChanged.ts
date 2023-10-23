@@ -9,7 +9,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import { Address } from 'ton';
+import { Address } from '@ton/core';
 
 export function handleAccountGetChanged(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {

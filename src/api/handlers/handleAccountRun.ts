@@ -9,7 +9,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import {Address, Cell, parseTuple, TupleItem, serializeTuple} from 'ton';
+import {Address, Cell, parseTuple, TupleItem, serializeTuple} from '@ton/core';
 import { runContract } from '../../executor/runContract';
 import { cellDictionaryToCell} from "../../utils/convert";
 

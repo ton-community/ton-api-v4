@@ -9,7 +9,7 @@
 import { BN } from "bn.js";
 import EventEmitter from "events";
 import { delay, InvalidateSync } from "teslabot";
-import { Address } from "ton";
+import { Address } from "@ton/core";
 import { LiteClient } from "ton-lite-client";
 import { liteServer_MasterchainInfoExt } from "ton-lite-client/dist/schema";
 import { log } from "../utils/log";

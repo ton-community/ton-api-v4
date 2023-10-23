@@ -7,11 +7,10 @@
  */
 
 import { FastifyRequest, FastifyReply } from 'fastify';
-import {beginCell, Cell, Slice} from 'ton';
+import { beginCell, Cell, Dictionary } from '@ton/core';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import {cellDictionaryToCell, uint256ToAddress} from "../../utils/convert";
-import {serializeDict} from "ton-core/dist/dict/serializeDict";
+import { cellDictionaryToCell, uint256ToAddress } from "../../utils/convert";
 
 export function handleGetConfig(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -50,17 +49,14 @@ export function handleGetConfig(client: LiteClient) {
             let cell: Cell;
             if (ids && ids.length > 0) {
                 let parsed = config.config;
-                let dict = new Map<bigint, Slice>();
-                for (let i of ids) {
-                    let key = BigInt(i);
-                    let ex = parsed.get(i);
+                let dict = Dictionary.empty(Dictionary.Keys.Int(32), Dictionary.Values.Cell());
+                for (let key of ids) {
+                    let ex = parsed.get(key);
                     if (ex) {
-                        dict.set(key, ex.asSlice());
+                        dict.set(key, ex);
                     }
                 }
-                const builder = beginCell()
-                serializeDict(dict, 32, (src, dst) => dst.storeRef(src.asCell()), builder);
-                cell = builder.endCell()
+                cell = beginCell().storeDictDirect(dict).endCell();
             } else {
                 cell = cellDictionaryToCell(config.config)
             }

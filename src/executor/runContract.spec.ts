@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Address, Cell, TonClient4 } from "ton";
+import { Address, Cell } from "@ton/core";
+import { TonClient4 } from "@ton/ton";
 import { runContract } from "./runContract";
 
 describe('runContract', () => {

@@ -1,6 +1,5 @@
 import BN from "bn.js";
-import { Dictionary } from "ton-core/dist/dict/Dictionary";
-import { Address, beginCell } from "ton";
+import { Address, beginCell, Dictionary } from "@ton/core";
 
 export function BNToBigint(num: BN) {
     return BigInt(num.toString());

@@ -10,6 +10,8 @@ import { Address, Cell } from "@ton/core";
 import { TonClient4 } from "@ton/ton";
 import { runContract } from "./runContract";
 
+jest.setTimeout(10000)
+
 describe('runContract', () => {
     it('should execute contract', async () => {
         const client = new TonClient4({ endpoint: 'https://mainnet-v4.tonhubapi.com' });
@@ -24,8 +26,8 @@ describe('runContract', () => {
         let res = await runContract({
             method: 'get_staking_status',
             code: Cell.fromBoc(Buffer.from(contract.account.state.code!, 'base64'))[0],
-            data: dt,
-            address,
+            data: Cell.fromBoc(dt.toBoc())[0],
+            address: Address.parse(address.toString()),
             balance: BigInt(contract.account.balance.coins),
             config: Cell.fromBoc(Buffer.from(config.config.cell, 'base64'))[0],
             lt: BigInt(contract.account.last!.lt),

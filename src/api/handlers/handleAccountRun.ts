@@ -9,9 +9,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import {Address, Cell, parseTuple, TupleItem, serializeTuple} from '@ton/core';
+import { Address, Cell, parseTuple, TupleItem, serializeTuple } from '@ton/core';
 import { runContract } from '../../executor/runContract';
-import { cellDictionaryToCell} from "../../utils/convert";
+import { cellDictionaryToCell } from "../../utils/convert";
+import { Cacheable } from 'cache-flow';
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
@@ -69,6 +70,41 @@ function stackToString(item: TupleItem): any {
     }
 }
 
+class CachedClient {
+    @Cacheable({
+        options: { expirationTime: 2, maxSize: 1000 },
+        argsToKey: (address: Address, mcInfoId: any) => [
+            address.toString(),
+            mcInfoId.kind,
+            mcInfoId.workchain,
+            mcInfoId.shard,
+            mcInfoId.seqno,
+            mcInfoId.rootHash,
+            mcInfoId.fileHash
+        ],
+        serialize: (result) => { return result },
+    })
+    public static async getAccountStateCached(client: LiteClient, address: Address, mcInfoId: any) {
+        return await client.getAccountState(address, mcInfoId)
+    }
+
+    @Cacheable({
+        options: { expirationTime: 2, maxSize: 1000 },
+        argsToKey: (block: any) => [
+            block.kind,
+            block.workchain,
+            block.shard,
+            block.seqno,
+            block.rootHash,
+            block.fileHash
+        ],
+        serialize: (result) => { return result },
+    })
+    public static async getConfig(client: LiteClient, block: any) {
+        return await client.getConfig(block)
+    }
+}
+
 export function handleAccountRun(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
@@ -88,7 +124,7 @@ export function handleAccountRun(client: LiteClient) {
             // Enable work-around for some contracts
             let wa = enableWorkaround.get(address.toString());
             if (wa === command) {
-                let state = await client.getAccountState(address, mcInfo.id);
+                let state = await CachedClient.getAccountStateCached(client, address, mcInfo.id);
 
                 // If no active account
                 if (!state.state || state.state.storage.state.type !== 'active') {
@@ -118,91 +154,65 @@ export function handleAccountRun(client: LiteClient) {
                 }
 
                 // Fetch config
-                let config = await client.getConfig(state.block);
+                let config = await CachedClient.getConfig(client, state.block);
 
                 // Execute
                 let executionResult = await runContract({
                     method: command,
-                    code: state.state.storage.state.state.code!,
-                    data: state.state.storage.state.state.data!,
-                    address: address,
+                    code: Cell.fromBoc(state.state.storage.state.state.code!.toBoc())[0],
+                    data: Cell.fromBoc(state.state.storage.state.state.data!.toBoc())[0],
+                    address: Address.parse(address.toString()),
                     balance: state.state.storage.balance.coins,
-                    config: cellDictionaryToCell(config.config),
+                    config: Cell.fromBoc(cellDictionaryToCell(config.config).toBoc())[0],
                     lt: state.state.storage.lastTransLt,
                     stack: []
                 });
 
                 // Handle response
-                if (executionResult.ok) {
-                    let resStack: TupleItem[] = [];
-                    for (let s of executionResult.stack) {
-                        if (s.type === 'cell') {
-                            resStack.push({ type: 'cell', cell: Cell.fromBoc(Buffer.from(s.value, 'base64'))[0] });
-                        } else if (s.type === 'cell_slice') {
-                            resStack.push({ type: 'slice', cell: Cell.fromBoc(Buffer.from(s.value, 'base64'))[0] });
-                        } else if (s.type === 'int') {
-                            resStack.push({ type: 'int', value: BigInt(s.value) });
-                        } else if (s.type === 'null') {
-                            resStack.push({ type: 'null' });
-                        } else {
-                            throw Error('Unknown stack item')
-                        }
+                let resStack: TupleItem[] = [];
+                for (let s of executionResult.stack) {
+                    if (s.type === 'cell') {
+                        resStack.push({ type: 'cell', cell: Cell.fromBoc(Buffer.from(s.cell.toString("base64"), 'base64'))[0] });
+                    } else if (s.type === 'slice') {
+                        resStack.push({ type: 'slice', cell: Cell.fromBoc(Buffer.from(s.cell.toString("base64"), 'base64'))[0] });
+                    } else if (s.type === 'int') {
+                        resStack.push({ type: 'int', value: BigInt(s.value.toString()) });
+                    } else if (s.type === 'null') {
+                        resStack.push({ type: 'null' });
+                    } else {
+                        throw Error('Unknown stack item')
                     }
-                    let hf = hotfix.get(address.toString());
-                    if (hf) {
-                        let hff = hf.get(command);
-                        if (hff) {
-                            resStack = hff(resStack);
-                        }
-                    }
-                    res.status(200)
-                        .header('Cache-Control', 'public, max-age=31536000')
-                        .send({
-                            arguments: stackArgs.map(stackToString),
-                            result: resStack.map(stackToString),
-                            exitCode: executionResult.exit_code!,
-                            resultRaw: serializeTuple(resStack).toBoc({ idx: false }).toString('base64'),
-                            block: {
-                                workchain: state.block.workchain,
-                                seqno: state.block.seqno,
-                                shard: state.block.shard,
-                                rootHash: state.block.rootHash.toString('base64'),
-                                fileHash: state.block.fileHash.toString('base64'),
-                            },
-                            shardBlock: {
-                                workchain: state.shardBlock.workchain,
-                                seqno: state.shardBlock.seqno,
-                                shard: state.shardBlock.shard,
-                                rootHash: state.shardBlock.rootHash.toString('base64'),
-                                fileHash: state.shardBlock.fileHash.toString('base64'),
-                            }
-                        });
-                    return;
-                } else {
-                    res.status(200)
-                        .header('Cache-Control', 'public, max-age=31536000')
-                        .send({
-                            arguments: stackArgs.map(stackToString),
-                            result: null,
-                            exitCode: executionResult.exit_code!,
-                            resultRaw: null,
-                            block: {
-                                workchain: state.block.workchain,
-                                seqno: state.block.seqno,
-                                shard: state.block.shard,
-                                rootHash: state.block.rootHash.toString('base64'),
-                                fileHash: state.block.fileHash.toString('base64'),
-                            },
-                            shardBlock: {
-                                workchain: state.shardBlock.workchain,
-                                seqno: state.shardBlock.seqno,
-                                shard: state.shardBlock.shard,
-                                rootHash: state.shardBlock.rootHash.toString('base64'),
-                                fileHash: state.shardBlock.fileHash.toString('base64'),
-                            }
-                        });
-                    return;
                 }
+                let hf = hotfix.get(address.toString());
+                if (hf) {
+                    let hff = hf.get(command);
+                    if (hff) {
+                        resStack = hff(resStack);
+                    }
+                }
+                res.status(200)
+                    .header('Cache-Control', 'public, max-age=31536000')
+                    .send({
+                        arguments: stackArgs.map(stackToString),
+                        result: resStack.map(stackToString),
+                        exitCode: executionResult.exitCode!,
+                        resultRaw: serializeTuple(resStack).toBoc({ idx: false }).toString('base64'),
+                        block: {
+                            workchain: state.block.workchain,
+                            seqno: state.block.seqno,
+                            shard: state.block.shard,
+                            rootHash: state.block.rootHash.toString('base64'),
+                            fileHash: state.block.fileHash.toString('base64'),
+                        },
+                        shardBlock: {
+                            workchain: state.shardBlock.workchain,
+                            seqno: state.shardBlock.seqno,
+                            shard: state.shardBlock.shard,
+                            rootHash: state.shardBlock.rootHash.toString('base64'),
+                            fileHash: state.shardBlock.fileHash.toString('base64'),
+                        }
+                    });
+                return;
             }
 
             // Normal execution

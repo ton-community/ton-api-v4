@@ -42,8 +42,8 @@ export function handleAccountGetLite(client: LiteClient) {
                 } else if (account.state.storage.state.type === 'active') {
                     state = {
                         type: 'active',
-                        codeHash: account.state.storage.state.state.code!.hash().toString('base64'),
-                        dataHash: account.state.storage.state.state.data!.hash().toString('base64')
+                        codeHash: account.state.storage.state.state.code?.hash().toString('base64') ?? null,
+                        dataHash: account.state.storage.state.state.data?.hash().toString('base64') ?? null
                     };
                 } else {
                     state = {

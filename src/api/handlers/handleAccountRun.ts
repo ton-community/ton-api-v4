@@ -12,7 +12,6 @@ import { warn } from "../../utils/log";
 import { Address, Cell, parseTuple, TupleItem, serializeTuple } from '@ton/core';
 import { runContract } from '../../executor/runContract';
 import { cellDictionaryToCell } from "../../utils/convert";
-import { Cacheable } from 'cache-flow';
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
@@ -38,6 +37,7 @@ enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1wh
 enableWorkaround.set(Address.parse('kQDsPXQhe6Jg5hZYATRfYwne0o_RbReMG2P3zHfcFUwHALeS').toString(), 'get_staking_status');
 enableWorkaround.set(Address.parse('kQCkXp5Z3tJ_eAjFG_0xbbfx2Oh_ESyY6Nk56zARZDwhales').toString(), 'get_staking_status');
 enableWorkaround.set(Address.parse('kQDV1LTU0sWojmDUV4HulrlYPpxLWSUjM6F3lUurMbwhales').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('kQDDu7fKsyle3Gqfae0wayvOQm3RN6gw4b_7QzpNAWLIQUId').toString(), 'get_staking_status');
 
 // Work-around for staking
 const hotfix = new Map<string, Map<string, (src: TupleItem[]) => TupleItem[]>>();
@@ -70,41 +70,6 @@ function stackToString(item: TupleItem): any {
     }
 }
 
-class CachedClient {
-    @Cacheable({
-        options: { expirationTime: 2, maxSize: 1000 },
-        argsToKey: (address: Address, mcInfoId: any) => [
-            address.toString(),
-            mcInfoId.kind,
-            mcInfoId.workchain,
-            mcInfoId.shard,
-            mcInfoId.seqno,
-            mcInfoId.rootHash,
-            mcInfoId.fileHash
-        ],
-        serialize: (result) => { return result },
-    })
-    public static async getAccountStateCached(client: LiteClient, address: Address, mcInfoId: any) {
-        return await client.getAccountState(address, mcInfoId)
-    }
-
-    @Cacheable({
-        options: { expirationTime: 2, maxSize: 1000 },
-        argsToKey: (block: any) => [
-            block.kind,
-            block.workchain,
-            block.shard,
-            block.seqno,
-            block.rootHash,
-            block.fileHash
-        ],
-        serialize: (result) => { return result },
-    })
-    public static async getConfig(client: LiteClient, block: any) {
-        return await client.getConfig(block)
-    }
-}
-
 export function handleAccountRun(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
@@ -124,7 +89,7 @@ export function handleAccountRun(client: LiteClient) {
             // Enable work-around for some contracts
             let wa = enableWorkaround.get(address.toString());
             if (wa === command) {
-                let state = await CachedClient.getAccountStateCached(client, address, mcInfo.id);
+                let state = await client.getAccountState(address, mcInfo.id);
 
                 // If no active account
                 if (!state.state || state.state.storage.state.type !== 'active') {
@@ -154,7 +119,7 @@ export function handleAccountRun(client: LiteClient) {
                 }
 
                 // Fetch config
-                let config = await CachedClient.getConfig(client, state.block);
+                let config = await client.getConfig(state.block);
 
                 // Execute
                 let executionResult = await runContract({
@@ -165,7 +130,7 @@ export function handleAccountRun(client: LiteClient) {
                     balance: state.state.storage.balance.coins,
                     config: Cell.fromBoc(cellDictionaryToCell(config.config).toBoc())[0],
                     lt: state.state.storage.lastTransLt,
-                    stack: []
+                    stack: stackArgs.map(stackToString)
                 });
 
                 // Handle response

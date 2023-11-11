@@ -31,6 +31,7 @@ enableWorkaround.set(Address.parse('EQAA_5_dizuA1w6OpzTSYvXhvUwYTDNTW_MZDdZ0CGKe
 enableWorkaround.set(Address.parse('EQDvvBmP3wUcjoXPY1jHfT4-fgb294imVYH5EHdLnAKeeper').toString(), 'get_staking_status');
 enableWorkaround.set(Address.parse('EQDhGXtbR6ejNQucRcoyzwiaF2Ke-5T8reptsiuZ_mLockup').toString(), 'get_staking_status');
 enableWorkaround.set(Address.parse('EQDg5ThqQ1t9eriIv2HkH6XUiUs_Wd4YmXZeGpnPzwLockup').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('EQB0SoxuGDx5qjVt0P_bPICFeWdFLBmVopHhjgfs0q-wsTON').toString(), 'get_staking_status');
 
 // Testnet
 enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1whaLEs').toString(), 'get_staking_status');

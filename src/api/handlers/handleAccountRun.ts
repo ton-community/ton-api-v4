@@ -38,7 +38,7 @@ enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1wh
 enableWorkaround.set(Address.parse('kQDsPXQhe6Jg5hZYATRfYwne0o_RbReMG2P3zHfcFUwHALeS').toString(), 'get_staking_status');
 enableWorkaround.set(Address.parse('kQCkXp5Z3tJ_eAjFG_0xbbfx2Oh_ESyY6Nk56zARZDwhales').toString(), 'get_staking_status');
 enableWorkaround.set(Address.parse('kQDV1LTU0sWojmDUV4HulrlYPpxLWSUjM6F3lUurMbwhales').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQDDu7fKsyle3Gqfae0wayvOQm3RN6gw4b_7QzpNAWLIQUId').toString(), 'get_staking_status');
+enableWorkaround.set(Address.parse('kQCSJnVYculwsyLUx_VT3qbIeYUs-nwfPsXjfo9VLYlIQuiD').toString(), 'get_staking_status');
 
 // Work-around for staking
 const hotfix = new Map<string, Map<string, (src: TupleItem[]) => TupleItem[]>>();

@@ -10,7 +10,7 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
 import { Address } from '@ton/core';
-import { bigintToBase64, safeBigIntToNumber } from "../../utils/convert";
+import { uint256ToBase64, safeBigIntToNumber } from "../../utils/convert";
 
 export function handleAccountGetLite(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -48,7 +48,7 @@ export function handleAccountGetLite(client: LiteClient) {
                 } else {
                     state = {
                         type: 'frozen',
-                        stateHash: bigintToBase64(account.state.storage.state.stateHash)
+                        stateHash: uint256ToBase64(account.state.storage.state.stateHash)
                     };
                 }
             } else {
@@ -76,7 +76,7 @@ export function handleAccountGetLite(client: LiteClient) {
                         },
                         last: account.lastTx ? {
                             lt: account.lastTx.lt.toString(),
-                            hash: bigintToBase64(account.lastTx.hash)
+                            hash: uint256ToBase64(account.lastTx.hash)
                         } : null,
                         storageStat: storage
                     }

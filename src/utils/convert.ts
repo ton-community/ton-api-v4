@@ -5,10 +5,9 @@ export function BNToBigint(num: BN) {
     return BigInt(num.toString());
 }
 
-export function bigintToBase64(bigint: bigint) {
+export function uint256ToBase64(bigint: bigint) {
     const hex = bigint.toString(16);
-    const padding = hex.length % 2 === 0 ? '' : '0';
-    const hexNumber = padding + hex;
+    const hexNumber = hex.padStart(64, "0");
 
     const buffer = Buffer.from(hexNumber, 'hex');
     return buffer.toString('base64');

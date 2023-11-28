@@ -2,7 +2,7 @@ import BN from "bn.js";
 import { Address, Dictionary } from "@ton/core";
 import {
     BNToBigint,
-    bigintToBase64,
+    uint256ToBase64,
     cellDictionaryToCell,
     uint256ToBuffer32,
     uint256ToAddress,
@@ -15,9 +15,9 @@ describe('Utility Functions', () => {
         expect(BNToBigint(bn)).toBe(BigInt('123456789'));
     });
 
-    test('bigintToBase64 converts bigint to Base64 string correctly', () => {
+    test('uint256ToBase64 converts bigint to Base64 string correctly', () => {
         const bigint = 65537n;
-        expect(bigintToBase64(bigint)).toBe('AQAB');
+        expect(uint256ToBase64(bigint)).toBe('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAE=');
     });
 
     test('cellDictionaryToCell returns a valid cell', () => {

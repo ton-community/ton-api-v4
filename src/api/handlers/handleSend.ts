@@ -15,19 +15,20 @@ export function handleSend(clients: { clients: LiteClient[] }[]) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         const boc: string = (req.body as any).boc;
         try {
-
+            res.status(500)
+                    .send('500 Internal Error');
             // Parse and serialize message
-            let cell = Cell.fromBoc(Buffer.from(boc, 'base64'))[0];
-            let serialized = cell.toBoc({ idx: false });
+            // let cell = Cell.fromBoc(Buffer.from(boc, 'base64'))[0];
+            // let serialized = cell.toBoc({ idx: false });
 
             // Send in parallel to all endpoints
-            let st = await Promise.any(clients.map(async (c) => {
-                let cl = c.clients[Math.floor(Math.random() * c.clients.length)];
-                return await cl.sendMessage(serialized);
-            }));
+            // let st = await Promise.any(clients.map(async (c) => {
+                // let cl = c.clients[Math.floor(Math.random() * c.clients.length)];
+                // return await cl.sendMessage(serialized);
+            // }));
 
             // Send response
-            res.status(200).send({ status: st.status });
+            // res.status(200).send({ status: st.status });
         } catch (e) {
             warn(e);
             try {

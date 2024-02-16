@@ -9,7 +9,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { warn } from "../../utils/log";
-import { Address } from '@ton/core';
+import { Address, Cell } from '@ton/core';
 import { uint256ToBase64, safeBigIntToNumber } from "../../utils/convert";
 
 export function handleAccountGet(client: LiteClient) {
@@ -40,10 +40,15 @@ export function handleAccountGet(client: LiteClient) {
                         type: 'uninit'
                     };
                 } else if (account.state.storage.state.type === 'active') {
+                    const librariesDictSlice = new Cell().asBuilder();
+                    const librariesCell = account.state.storage.state.state.libraries
+                        ? librariesDictSlice.storeDict(account.state.storage.state.state.libraries).asCell()
+                        : null;
                     state = {
                         type: 'active',
                         code: account.state.storage.state.state.code ? account.state.storage.state.state.code.toBoc({ idx: false }).toString('base64') : null,
                         data: account.state.storage.state.state.data ? account.state.storage.state.state.data.toBoc({ idx: false }).toString('base64') : null,
+                        libraries: librariesCell ? librariesCell.toBoc({ idx: false }).toString('base64') : null,
                     };
                 } else {
                     state = {

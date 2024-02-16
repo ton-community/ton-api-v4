@@ -57,7 +57,7 @@ export function handleAccountGet(client: LiteClient) {
             } else {
                 storage = null;
                 state = { type: 'uninit' };
-            }   
+            }
 
             // Convert currencies
             let currencies: { [id: number]: string } = {};

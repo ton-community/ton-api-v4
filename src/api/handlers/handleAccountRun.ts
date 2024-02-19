@@ -16,29 +16,29 @@ import { cellDictionaryToCell } from "../../utils/convert";
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
 
-// Mainnet
-enableWorkaround.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQCY4M6TZYnOMnGBQlqi_nyeaIB1LeBFfGgP4uXQ1VWhales').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQCOj4wEjXUR59Kq0KeXUJouY5iAcujkmwJGsYX7qPnITEAM').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQBI-wGVp_x0VFEjd7m9cEUD3tJ_bnxMSp0Tb9qz757ATEAM').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDFvnxuyA2ogNPOoEj1lu968U4PP8_FzJfrOWUsi_o1CLUB').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQA_cc5tIQ4haNbMVFUD1d0bNRt17S7wgWEqfP_xEaTACLUB').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQBYtJtQzU3M-AI23gFM91tW6kYlblVtjej59gS8P3uJ_ePN').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQCpCjQigwF27KQ588VhQv9jm_DUuL_ZLY3HCf_9yZW5_ePN').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDkCrGT_lwaKXZf6y3YuJI213PrH60JqoQQO-GT2VMorgen').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQBWc3jORk0evkkZYV4OanMhcfJEyz_mN7rQWYM7wiMorgen').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQAA_5_dizuA1w6OpzTSYvXhvUwYTDNTW_MZDdZ0CGKeeper').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDvvBmP3wUcjoXPY1jHfT4-fgb294imVYH5EHdLnAKeeper').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDhGXtbR6ejNQucRcoyzwiaF2Ke-5T8reptsiuZ_mLockup').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQDg5ThqQ1t9eriIv2HkH6XUiUs_Wd4YmXZeGpnPzwLockup').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('EQB0SoxuGDx5qjVt0P_bPICFeWdFLBmVopHhjgfs0q-wsTON').toString(), 'get_staking_status');
+// // Mainnet
+// enableWorkaround.set(Address.parse('EQCkR1cGmnsE45N4K0otPl5EnxnRakmGqeJUNua5fkWhales').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQCY4M6TZYnOMnGBQlqi_nyeaIB1LeBFfGgP4uXQ1VWhales').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQCOj4wEjXUR59Kq0KeXUJouY5iAcujkmwJGsYX7qPnITEAM').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQBI-wGVp_x0VFEjd7m9cEUD3tJ_bnxMSp0Tb9qz757ATEAM').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQDFvnxuyA2ogNPOoEj1lu968U4PP8_FzJfrOWUsi_o1CLUB').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQA_cc5tIQ4haNbMVFUD1d0bNRt17S7wgWEqfP_xEaTACLUB').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQBYtJtQzU3M-AI23gFM91tW6kYlblVtjej59gS8P3uJ_ePN').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQCpCjQigwF27KQ588VhQv9jm_DUuL_ZLY3HCf_9yZW5_ePN').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQDkCrGT_lwaKXZf6y3YuJI213PrH60JqoQQO-GT2VMorgen').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQBWc3jORk0evkkZYV4OanMhcfJEyz_mN7rQWYM7wiMorgen').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQAA_5_dizuA1w6OpzTSYvXhvUwYTDNTW_MZDdZ0CGKeeper').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQDvvBmP3wUcjoXPY1jHfT4-fgb294imVYH5EHdLnAKeeper').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQDhGXtbR6ejNQucRcoyzwiaF2Ke-5T8reptsiuZ_mLockup').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQDg5ThqQ1t9eriIv2HkH6XUiUs_Wd4YmXZeGpnPzwLockup').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('EQB0SoxuGDx5qjVt0P_bPICFeWdFLBmVopHhjgfs0q-wsTON').toString(), 'get_staking_status');
 
-// Testnet
-enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1whaLEs').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQDsPXQhe6Jg5hZYATRfYwne0o_RbReMG2P3zHfcFUwHALeS').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQCkXp5Z3tJ_eAjFG_0xbbfx2Oh_ESyY6Nk56zARZDwhales').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQDV1LTU0sWojmDUV4HulrlYPpxLWSUjM6F3lUurMbwhales').toString(), 'get_staking_status');
-enableWorkaround.set(Address.parse('kQCSJnVYculwsyLUx_VT3qbIeYUs-nwfPsXjfo9VLYlIQuiD').toString(), 'get_staking_status');
+// // Testnet
+// enableWorkaround.set(Address.parse('kQBs7t3uDYae2Ap4686Bl4zGaPKvpbauBnZO_WSop1whaLEs').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('kQDsPXQhe6Jg5hZYATRfYwne0o_RbReMG2P3zHfcFUwHALeS').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('kQCkXp5Z3tJ_eAjFG_0xbbfx2Oh_ESyY6Nk56zARZDwhales').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('kQDV1LTU0sWojmDUV4HulrlYPpxLWSUjM6F3lUurMbwhales').toString(), 'get_staking_status');
+// enableWorkaround.set(Address.parse('kQCSJnVYculwsyLUx_VT3qbIeYUs-nwfPsXjfo9VLYlIQuiD').toString(), 'get_staking_status');
 
 // Work-around for staking
 const hotfix = new Map<string, Map<string, (src: TupleItem[]) => TupleItem[]>>();

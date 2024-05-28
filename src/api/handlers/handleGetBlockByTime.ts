@@ -9,7 +9,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { Address } from '@ton/core';
 import { LiteClient } from 'ton-lite-client';
-import { warn } from "../../utils/log";
 
 export function handleGetBlockByUtime(client: LiteClient) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -64,13 +63,13 @@ export function handleGetBlockByUtime(client: LiteClient) {
                     }
                 });
         } catch (e) {
-            warn(e);
+            req.log.warn(e);
             try {
                 res.status(500)
                     .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
-                warn(e);
+                req.log.warn(e);
             }
         }
     };

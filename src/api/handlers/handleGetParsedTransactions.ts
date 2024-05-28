@@ -8,7 +8,6 @@
 
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
-import { warn } from "../../utils/log";
 import { ParsedTransaction, rawTransactionToParsedTransaction } from '../../utils/rawTransactionToParsedTransaction';
 import { Address, Cell, loadTransaction } from '@ton/ton';
 
@@ -52,13 +51,13 @@ export function handleGetParsedTransactions(client: LiteClient) {
                 .header('Cache-Control', 'public, max-age=31536000')
                 .send(data);
         } catch (e) {
-            warn(e);
+            req.log.warn(e);
             try {
                 res.status(500)
                     .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
-                warn(e);
+                req.log.warn(e);
             }
         }
     };

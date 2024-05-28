@@ -9,7 +9,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { BlockSync } from '../../sync/BlockSync';
-import { log, warn } from "../../utils/log";
 
 export function handleGetBlockLatest(client: LiteClient, blockSync: BlockSync) {
     return async (req: FastifyRequest, res: FastifyReply) => {
@@ -35,13 +34,13 @@ export function handleGetBlockLatest(client: LiteClient, blockSync: BlockSync) {
                     now: mc.lastUtime
                 });
         } catch (e) {
-            warn(e);
+            req.log.warn(e);
             try {
                 res.status(500)
                     .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
-                warn(e);
+                req.log.warn(e);
             }
         }
     };

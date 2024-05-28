@@ -8,7 +8,6 @@
 
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from "ton-lite-client";
-import { warn } from '../../utils/log';
 import { Address, Cell, loadMessageRelaxed } from '@ton/core';
 
 const EMPTY_ADDRESS = Address.parse('EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c');
@@ -51,12 +50,12 @@ export function handleSend(clients: { clients: LiteClient[] }[]) {
             // Send response
             res.status(200).send({ status: st.status });
         } catch (e) {
-            warn(e);
+            req.log.warn(e);
             try {
                 res.status(500)
                     .send('500 Internal Error');
             } catch (e) {
-                warn(e);
+                req.log.warn(e);
             }
         }
     }

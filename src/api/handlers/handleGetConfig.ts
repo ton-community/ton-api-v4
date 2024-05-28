@@ -9,7 +9,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { beginCell, Cell, Dictionary } from '@ton/core';
 import { LiteClient } from 'ton-lite-client';
-import { warn } from "../../utils/log";
 import { cellDictionaryToCell, uint256ToAddress } from "../../utils/convert";
 
 export function handleGetConfig(client: LiteClient) {
@@ -75,13 +74,13 @@ export function handleGetConfig(client: LiteClient) {
                     }
                 });
         } catch (e) {
-            warn(e);
+            req.log.warn(e);
             try {
                 res.status(500)
                     .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
-                warn(e);
+                req.log.warn(e);
             }
         }
     };

@@ -8,7 +8,6 @@
 
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
-import { warn } from "../../utils/log";
 import { Address } from '@ton/core';
 
 export function handleAccountGetChanged(client: LiteClient) {
@@ -54,13 +53,13 @@ export function handleAccountGetChanged(client: LiteClient) {
                 });
 
         } catch (e) {
-            warn(e);
+            req.log.warn(e);
             try {
                 res.status(500)
                     .header('Cache-Control', 'public, max-age=1')
                     .send('500 Internal Error');
             } catch (e) {
-                warn(e);
+                req.log.warn(e);
             }
         }
     };

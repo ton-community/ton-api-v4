@@ -84,7 +84,7 @@ export class BlockSync extends EventEmitter {
 
                 if (!this.#currentFull) {
                     let block = await this.#client.getFullBlock(initial.last.seqno);
-                    this.#currentFull = convertBlockFull(initial.last.seqno, block, lastUtime);
+                    this.#currentFull = convertBlockFull(initial.last.seqno, block, initial.lastUtime);
                     this.emit('block_full', this.#currentFull);
                     continue;
                 }

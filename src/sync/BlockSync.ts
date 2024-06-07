@@ -19,20 +19,24 @@ function convertBlock(src: liteServer_MasterchainInfoExt) {
     return { seqno: src.last.seqno, time: src.lastUtime, now: src.now };
 }
 
-function convertBlockFull(seqno: number, src: {
-    shards: {
-        rootHash: Buffer;
-        fileHash: Buffer;
-        transactions: {
-            hash: Buffer;
-            lt: string;
-            account: Buffer;
+function convertBlockFull(
+    seqno: number,
+    src: {
+        shards: {
+            rootHash: Buffer;
+            fileHash: Buffer;
+            transactions: {
+                hash: Buffer;
+                lt: string;
+                account: Buffer;
+            }[];
+            workchain: number;
+            seqno: number;
+            shard: string;
         }[];
-        workchain: number;
-        seqno: number;
-        shard: string;
-    }[];
-}) {
+    },
+    lastUtime: number
+) {
     let changed: { [key: string]: { lt: string, hash: string } } = {};
     for (let s of src.shards) {
         for (let t of s.transactions) {
@@ -53,7 +57,7 @@ function convertBlockFull(seqno: number, src: {
             }
         }
     }
-    return { seqno, changed }
+    return { seqno, changed, lastUtime };
 }
 
 export class BlockSync extends EventEmitter {
@@ -62,7 +66,7 @@ export class BlockSync extends EventEmitter {
 
     #current: liteServer_MasterchainInfoExt;
     #currentSimple: any;
-    #currentFull: { seqno: number, changed: { [key: string]: { lt: string, hash: string } } } | null = null;
+    #currentFull: { seqno: number, changed: { [key: string]: { lt: string, hash: string } }, lastUtime: number } | null = null;
 
     #stopped = false;
     #fullBlockSync: InvalidateSync;
@@ -76,10 +80,11 @@ export class BlockSync extends EventEmitter {
             while (true) {
 
                 let current = this.#current.last.seqno;
+                let lastUtime = this.#current.lastUtime;
 
                 if (!this.#currentFull) {
                     let block = await this.#client.getFullBlock(initial.last.seqno);
-                    this.#currentFull = convertBlockFull(initial.last.seqno, block);
+                    this.#currentFull = convertBlockFull(initial.last.seqno, block, initial.lastUtime);
                     this.emit('block_full', this.#currentFull);
                     continue;
                 }
@@ -87,7 +92,7 @@ export class BlockSync extends EventEmitter {
                 // Fetch next
                 if (current > this.#currentFull.seqno) {
                     let block = await this.#client.getFullBlock(current);
-                    this.#currentFull = convertBlockFull(current, block);
+                    this.#currentFull = convertBlockFull(current, block, lastUtime);
                     this.emit('block_full', this.#currentFull);
                     continue;
                 } else {

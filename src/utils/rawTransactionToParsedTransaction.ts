@@ -171,16 +171,18 @@ export function rawTransactionToParsedTransaction(tx: Transaction, hash: string,
         const parse = inMessageBody!.beginParse();
         parse.skip(512 + 32 + 32); // Signature + wallet_id + timeout
         seqno = parse.loadUint(32);
-        const command = parse.loadUint(8);
-        if (command === 0) {
-            let message = loadMessageRelaxed(parse.loadRef().beginParse());
-            if (message.info.dest && Address.isAddress(message.info.dest)) {
-                dest = message.info.dest.toString({ testOnly: isTestnet });
+        if (parse.remainingBits) {
+            const command = parse.loadUint(8);
+            if (command === 0) {
+                let message = loadMessageRelaxed(parse.loadRef().beginParse());
+                if (message.info.dest && Address.isAddress(message.info.dest)) {
+                    dest = message.info.dest.toString({ testOnly: isTestnet });
+                }
+                body = parseBody(message.body);
             }
-            body = parseBody(message.body);
-        }
-        if (tx.outMessagesCount === 0) {
-            status = 'failed';
+            if (tx.outMessagesCount === 0) {
+                status = 'failed';
+            }
         }
     }
 

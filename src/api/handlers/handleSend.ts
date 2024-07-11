@@ -11,7 +11,7 @@ import { LiteClient } from "ton-lite-client";
 import { Address, Cell, loadMessageRelaxed, loadMessage } from '@ton/core';
 
 const EMPTY_ADDRESS = Address.parse('EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c');
-const RETRY_COUNT = 30;
+const RETRY_COUNT = 5;
 
 async function broadcastPayload(clients: { clients: LiteClient[] }[], payload: Buffer) {
     return await Promise.any(clients.map(async (c) => {

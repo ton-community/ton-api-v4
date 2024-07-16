@@ -12,12 +12,18 @@ import { LiteClient } from "ton-lite-client";
 import { BlockSync } from "../../sync/BlockSync";
 
 export function handleBlockWatch(client: LiteClient, blockSync: BlockSync) {
-    return (connection: SocketStream, request: FastifyRequest) => {
-        connection.socket.send(JSON.stringify(blockSync.currentSimple));
-        let handler = (src: any) => connection.socket.send(JSON.stringify(src));
-        blockSync.on('block', handler);
-        connection.on('close', () => {
-            blockSync.off('block', handler);
-        });
-    };
+  return (connection: SocketStream, request: FastifyRequest) => {
+    if (!connection.destroyed) {
+      connection.socket.send(JSON.stringify(blockSync.currentSimple));
+      let handler = (src: any) => {
+        if (!connection.destroyed) {
+          return connection.socket.send(JSON.stringify(src));
+        }
+      };
+      blockSync.on('block', handler);
+      connection.on('close', () => {
+        blockSync.off('block', handler);
+      });
+    }
+  };
 }

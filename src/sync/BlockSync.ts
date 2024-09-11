@@ -124,7 +124,10 @@ export class BlockSync extends EventEmitter {
         log('Starting from block: ' + this.#current.last.seqno);
         backoff(async () => {
             while (!this.#stopped) {
-                let nmc = await this.#client.getMasterchainInfoExt();
+                let nmc = await this.#client.getMasterchainInfoExt({
+                    awaitSeqno: this.#current.last.seqno + 1
+                });
+                
                 if (nmc.last.seqno > this.#current.last.seqno) {
                     this.#current = nmc;
                     this.#fullBlockSync.invalidate();

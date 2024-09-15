@@ -9,6 +9,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from "ton-lite-client";
 import { Address, Cell, loadMessageRelaxed, loadMessage } from '@ton/core';
+import axios from 'axios';
 
 const EMPTY_ADDRESS = Address.parse('EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c');
 const RETRY_COUNT = 5;
@@ -36,6 +37,16 @@ async function retrySend(clients: { clients: LiteClient[] }[], req: FastifyReque
         }
         await new Promise(r => setTimeout(r, 1000));
     }
+}
+
+async function sendTonApi(boc: string) {
+    await axios.post('https://tonapi.io/v2/blockchain/message', {
+        boc,
+    }, {
+        headers: {
+            'Authorization': `Bearer ${process.env.TONAPI_KEY!}`,
+        }
+    })
 }
 
 export function handleSend(clients: { clients: LiteClient[] }[]) {
@@ -75,6 +86,12 @@ export function handleSend(clients: { clients: LiteClient[] }[]) {
             }
 
             const serialized = cell.toBoc({ idx: false });
+
+            if (process.env.TONAPI_KEY) {
+                await sendTonApi(serialized.toString('base64'));
+                res.status(200).send({ status: 0 });
+                return;
+            }
 
             // Send in parallel to all endpoints
             const st = await broadcastPayload(clients, serialized);

@@ -10,8 +10,10 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { beginCell, Cell, Dictionary } from '@ton/core';
 import { LiteClient } from 'ton-lite-client';
 import { cellDictionaryToCell, uint256ToAddress } from "../../utils/convert";
+import { BlockSync } from '../../sync/BlockSync';
+import { limitBlocksHistory } from '../limitBlocksHistory';
 
-export function handleGetConfig(client: LiteClient) {
+export function handleGetConfig(client: LiteClient, sync: BlockSync) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
             let filterParam = (req.params as any).ids as string;
@@ -31,13 +33,11 @@ export function handleGetConfig(client: LiteClient) {
             }
 
             // Check if seqno is valid
-            const lastSeqno = (await client.getMasterchainInfo()).last.seqno;
-            if (seqno > lastSeqno) {
-                res.status(200)
-                    .header('Cache-Control', 'public, max-age=5')
-                    .send({
-                        exist: false
-                    });
+            if (limitBlocksHistory(sync, seqno)) {
+                res.status(403)
+                    .header('Cache-Control', 'public, max-age=30')
+                    .send('403 Block is not available');
+                return;
             }
 
             // Fetch block and config

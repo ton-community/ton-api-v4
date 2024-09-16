@@ -47,14 +47,14 @@ export async function startApi(client: LiteClient, child: { clients: LiteClient[
     app.get('/block/watch/changed', { websocket: true } as any, handleBlockWatchChanged(client, blockSync));
     app.get('/block/latest', handleGetBlockLatest(client, blockSync));
     app.get('/block/utime/:utime', handleGetBlockByUtime(client));
-    app.get('/block/:seqno', handleGetBlock(client));
-    app.get('/block/:seqno/config', handleGetConfig(client));
-    app.get('/block/:seqno/config/:ids', handleGetConfig(client));
-    app.get('/block/:seqno/:address', handleAccountGet(client));
-    app.get('/block/:seqno/:address/lite', handleAccountGetLite(client));
-    app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client));
-    app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client));
-    app.post('/block/:seqno/:address/run/:command', handleAccountRun(client));
+    app.get('/block/:seqno', handleGetBlock(client, blockSync));
+    app.get('/block/:seqno/config', handleGetConfig(client, blockSync));
+    app.get('/block/:seqno/config/:ids', handleGetConfig(client, blockSync));
+    app.get('/block/:seqno/:address', handleAccountGet(client, blockSync));
+    app.get('/block/:seqno/:address/lite', handleAccountGetLite(client, blockSync));
+    app.get('/block/:seqno/:address/changed/:lt', handleAccountGetChanged(client, blockSync));
+    app.get('/block/:seqno/:address/run/:command/:args?', handleAccountRun(client, blockSync));
+    app.post('/block/:seqno/:address/run/:command', handleAccountRun(client, blockSync));
     app.get('/account/:address/tx/:lt/:hash', handleGetTransactions(client));
     app.get('/account/:address/tx/parsed/:lt/:hash', handleGetParsedTransactions(client));
 

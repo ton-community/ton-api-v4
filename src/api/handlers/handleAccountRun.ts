@@ -11,6 +11,8 @@ import { LiteClient } from 'ton-lite-client';
 import { Address, Cell, parseTuple, TupleItem, serializeTuple } from '@ton/core';
 import { runContract } from '../../executor/runContract';
 import { cellDictionaryToCell } from "../../utils/convert";
+import { BlockSync } from '../../sync/BlockSync';
+import { limitBlocksHistory } from '../limitBlocksHistory';
 
 // Temporary work-around
 const enableWorkaround = new Map<string, string>();
@@ -70,7 +72,7 @@ function stackToString(item: TupleItem): any {
     }
 }
 
-export function handleAccountRun(client: LiteClient) {
+export function handleAccountRun(client: LiteClient, sync: BlockSync) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const seqno = parseInt((req.params as any).seqno, 10);
@@ -86,6 +88,12 @@ export function handleAccountRun(client: LiteClient) {
             // Fetch account state
             let mcInfo = (await client.lookupBlockByID({ seqno: seqno, shard: '-9223372036854775808', workchain: -1 }));
 
+            if (limitBlocksHistory(sync, seqno)) {
+                res.status(403)
+                    .header('Cache-Control', 'public, max-age=30')
+                    .send('403 Forbidden');
+                return;
+            }
             // Enable work-around for some contracts
             let wa = enableWorkaround.get(address.toString());
             if (wa === command) {

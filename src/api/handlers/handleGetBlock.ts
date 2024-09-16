@@ -9,8 +9,10 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { Address } from '@ton/core';
 import { LiteClient } from 'ton-lite-client';
+import { BlockSync } from '../../sync/BlockSync';
+import { limitBlocksHistory } from '../limitBlocksHistory';
 
-export function handleGetBlock(client: LiteClient) {
+export function handleGetBlock(client: LiteClient, sync: BlockSync) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const seqno = parseInt((req.params as any).seqno, 10);
@@ -25,13 +27,21 @@ export function handleGetBlock(client: LiteClient) {
             }
 
             // Check if seqno is valid
-            const lastSeqno = (await client.getMasterchainInfo()).last.seqno;
+            const lastSeqno = sync.current.last.seqno;
             if (seqno > lastSeqno) {
                 res.status(200)
                     .header('Cache-Control', 'public, max-age=5')
                     .send({
                         exist: false
                     });
+                return;
+            }
+
+            if (limitBlocksHistory(sync, seqno)) {
+                res.status(403)
+                    .header('Cache-Control', 'public, max-age=30')
+                    .send('403 Forbidden');
+                return;
             }
 
             // Fetch block

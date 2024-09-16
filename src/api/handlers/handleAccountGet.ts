@@ -10,12 +10,21 @@ import { FastifyRequest, FastifyReply } from 'fastify';
 import { LiteClient } from 'ton-lite-client';
 import { Address } from '@ton/core';
 import { uint256ToBase64, safeBigIntToNumber } from "../../utils/convert";
+import { BlockSync } from '../../sync/BlockSync';
+import { limitBlocksHistory } from '../limitBlocksHistory';
 
-export function handleAccountGet(client: LiteClient) {
+export function handleAccountGet(client: LiteClient, sync: BlockSync) {
     return async (req: FastifyRequest, res: FastifyReply) => {
         try {
             const seqno = parseInt((req.params as any).seqno, 10);
             const address = Address.parseFriendly((req.params as any).address).address;
+
+            if (limitBlocksHistory(sync, seqno)) {
+                res.status(403)
+                    .header('Cache-Control', 'public, max-age=30')
+                    .send('403 Forbidden');
+                return;
+            }
 
             // Fetch account state
             let mcInfo = (await client.lookupBlockByID({ seqno: seqno, shard: '-9223372036854775808', workchain: -1 }));

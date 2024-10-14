@@ -1,4 +1,3 @@
-#
 # TON API v4
 
 Scallable and CDN-friendly HTTP API for TON blockchain.

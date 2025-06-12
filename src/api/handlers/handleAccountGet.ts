@@ -39,8 +39,7 @@ export function handleAccountGet(client: LiteClient, sync: BlockSync) {
                     duePayment: account.state.storageStats.duePayment ? account.state.storageStats.duePayment.toString(10) : null,
                     used: {
                         bits: safeBigIntToNumber(account.state.storageStats.used.bits),
-                        cells: safeBigIntToNumber(account.state.storageStats.used.cells),
-                        publicCells: safeBigIntToNumber(account.state.storageStats.used.publicCells)
+                        cells: safeBigIntToNumber(account.state.storageStats.used.cells)
                     }
                 };
                 if (account.state.storage.state.type === 'uninit') {

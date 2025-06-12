@@ -29,10 +29,10 @@
   "dependencies": {
     "@fastify/cors": "^7.0.0",
     "@fastify/websocket": "^5.0.0",
-    "@ton/core": "^0.56.2",
-    "@ton/crypto": "^3.2.0",
+    "@ton/core": "^0.61.0",
+    "@ton/crypto": "^3.3.0",
     "@ton/sandbox": "^0.11.0",
-    "@ton/ton": "^13.11.1",
+    "@ton/ton": "^15.2.1",
     "axios": "^0.25.0",
     "bn.js": "5.2.0",
     "date-fns": "^2.30.0",
